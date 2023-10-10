@@ -1,15 +1,14 @@
 package pl.interfejsygraficzne;
 
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
 @RestController
-public class ChujController {
-    @GetMapping("kuba")
-    public String Chuj(){
+public class HelloController {
+    @GetMapping("/")
+    public String index(){
         return "8=====D";
     }
 
