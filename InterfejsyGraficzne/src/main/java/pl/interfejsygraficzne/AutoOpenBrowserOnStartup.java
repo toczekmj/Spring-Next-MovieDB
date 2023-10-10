@@ -18,7 +18,7 @@ public class AutoOpenBrowserOnStartup {
             String[] browsers = { "google-chrome", "firefox", "mozilla", "epiphany", "konqueror",
                     "netscape", "opera", "links", "lynx" };
 
-            StringBuffer cmd = new StringBuffer();
+            StringBuilder cmd = new StringBuilder();
             for (int i = 0; i < browsers.length; i++)
                 if(i == 0)
                     cmd.append(String.format(    "%s \"%s\"", browsers[i], url));
