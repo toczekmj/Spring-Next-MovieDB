@@ -10,8 +10,12 @@ import java.util.List;
 
 @Service
 public class UserService {
-    @Autowired
     private IUserRepository repository;
+
+
+    public UserService(IUserRepository repository) {
+        this.repository = repository;
+    }
 
     public User saveUser(User user){
         return repository.save(user);
