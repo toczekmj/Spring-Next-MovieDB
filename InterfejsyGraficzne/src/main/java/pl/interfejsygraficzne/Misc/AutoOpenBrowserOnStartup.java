@@ -1,4 +1,4 @@
-package pl.interfejsygraficzne;
+package pl.interfejsygraficzne.Misc;
 
 import java.io.IOException;
 
@@ -11,7 +11,7 @@ public class AutoOpenBrowserOnStartup {
         }
         else if(IsMac(os)){
             String command = "open " + url;
-                Runtime.getRuntime().exec(command);
+            Runtime.getRuntime().exec(command);
         }
         else if(IsLinux(os)) {
             Runtime rt = Runtime.getRuntime();
