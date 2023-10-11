@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class RestExceptionHandler {
 
     @ExceptionHandler
-    public ResponseEntity<ApiException> handleUserNotFoundException(UserNotFoundException e) {
+    public ResponseEntity<ApiException> handleUserNotFoundException(MovieNotFoundException e) {
         ApiException exceptionReponse = new ApiException(HttpStatus.NOT_FOUND.value(), e.getMessage());
         return new ResponseEntity<>(exceptionReponse, HttpStatus.NOT_FOUND);
     }
