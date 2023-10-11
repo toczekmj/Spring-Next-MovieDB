@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.interfejsygraficzne.Model.User;
 import pl.interfejsygraficzne.Repository.IUserRepository;
+import pl.interfejsygraficzne.exception.UserNotFoundException;
+
 import java.util.List;
 
 @Service
@@ -24,7 +26,7 @@ public class UserService {
     }
 
     public User getUserById(int id){
-        return repository.findById(id).orElse(null);
+        return repository.findById(id).orElseThrow(UserNotFoundException::new);
     }
 
     public List<User> getUsersByFirstName(String name){
@@ -37,7 +39,7 @@ public class UserService {
     }
 
     public User updateUser(User user){
-        User existingUser = repository.findById(user.getId()).orElse(null);
+        User existingUser = repository.findById(user.getId()).orElseThrow(UserNotFoundException::new);
         existingUser.setName(user.getName());
         existingUser.setSurname(user.getSurname());
         existingUser.setAge(user.getAge());
