@@ -5,6 +5,6 @@ import pl.interfejsygraficzne.Model.User;
 
 import java.util.List;
 
-public interface IMySqlRepository extends JpaRepository<User, Integer> {
+public interface IUserRepository extends JpaRepository<User, Integer> {
     List<User> findByFirstName(String name);
 }
