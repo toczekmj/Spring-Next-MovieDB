@@ -19,4 +19,7 @@ public class Movie {
     private Double rating;
     @ManyToMany
     private List<Actor> actors;
+
+    @OneToMany(mappedBy = "movie")
+    private List<Comment> comments;
 }

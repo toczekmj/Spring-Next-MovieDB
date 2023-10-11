@@ -13,6 +13,7 @@ public class Comment {
     @GeneratedValue
     private Long id;
     private String text;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "movie_id", referencedColumnName = "movieId") // do przetestowania
     private Movie movie;
 }
