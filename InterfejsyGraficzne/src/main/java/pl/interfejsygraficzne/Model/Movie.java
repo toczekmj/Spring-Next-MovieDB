@@ -20,7 +20,7 @@ public class Movie {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "rating_id", referencedColumnName = "ratingId")
     private Rating rating;
-    @ManyToMany
+    @ManyToMany(mappedBy = "movies")
     private List<Actor> actors;
 
 
