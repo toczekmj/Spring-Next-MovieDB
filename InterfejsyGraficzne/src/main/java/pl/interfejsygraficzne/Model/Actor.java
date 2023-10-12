@@ -1,5 +1,6 @@
 package pl.interfejsygraficzne.Model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -28,5 +29,6 @@ public class Actor {
                     referencedColumnName = "movieId"
             )
     )
+    @JsonIgnore
     private List<Movie> movies;
 }
