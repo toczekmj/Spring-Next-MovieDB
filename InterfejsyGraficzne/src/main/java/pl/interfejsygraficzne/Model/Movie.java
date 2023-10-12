@@ -17,7 +17,9 @@ public class Movie {
     private String title;
     private String director;
     private Integer productionYear;
-    private Double rating;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "rating_id", referencedColumnName = "ratingId")
+    private Rating rating;
     @ManyToMany
     private List<Actor> actors;
 

@@ -9,10 +9,10 @@ public class Rating {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long ratingId;
     private Double plot;
     private Double acting;
     private Double scenography;
-    @ManyToOne
+    @OneToOne(mappedBy = "rating")
     private Movie movie;
 }

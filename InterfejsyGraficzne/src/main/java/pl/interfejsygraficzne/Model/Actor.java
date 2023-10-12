@@ -18,7 +18,7 @@ public class Actor {
             cascade = CascadeType.ALL
     )
     @JoinTable(
-            name="student_course_map",
+            name="actor_movie_map",
             joinColumns = @JoinColumn(
                     name = "actor_id",
                     referencedColumnName = "actorId"
