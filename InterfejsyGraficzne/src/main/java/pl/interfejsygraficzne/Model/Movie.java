@@ -1,10 +1,8 @@
 package pl.interfejsygraficzne.Model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.util.Collection;
 import java.util.List;
 
 @Entity
@@ -29,5 +27,9 @@ public class Movie {
 
     public void addComment(Comment comment) {
         comments.add(comment);
+    }
+
+    public void addActor(Actor actor){
+        actors.add(actor);
     }
 }
