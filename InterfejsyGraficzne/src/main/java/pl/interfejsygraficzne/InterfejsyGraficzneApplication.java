@@ -18,7 +18,7 @@ public class InterfejsyGraficzneApplication {
     @EventListener({ApplicationReadyEvent.class})
     private void ApplicationReadyEventa() throws IOException{
         System.out.println("Application ready. Launching Browser");
-        AutoOpenBrowserOnStartup.Browse("http://localhost:8080/");
+        AutoOpenBrowserOnStartup.Browse("http://localhost:8080/swagger-ui/index.html");
     }
 
 }

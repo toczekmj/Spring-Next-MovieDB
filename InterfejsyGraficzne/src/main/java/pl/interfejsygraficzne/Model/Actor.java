@@ -1,5 +1,6 @@
 package pl.interfejsygraficzne.Model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -10,7 +11,7 @@ import java.util.List;
 public class Actor {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long actorId;
     private String firstName;
     private String lastName;
@@ -18,7 +19,7 @@ public class Actor {
             cascade = CascadeType.ALL
     )
     @JoinTable(
-            name="student_course_map",
+            name="actor_movie_map",
             joinColumns = @JoinColumn(
                     name = "actor_id",
                     referencedColumnName = "actorId"
@@ -28,5 +29,10 @@ public class Actor {
                     referencedColumnName = "movieId"
             )
     )
+    @JsonIgnore
     private List<Movie> movies;
+
+    public void addMovie(Movie movie){
+        movies.add(movie);
+    }
 }

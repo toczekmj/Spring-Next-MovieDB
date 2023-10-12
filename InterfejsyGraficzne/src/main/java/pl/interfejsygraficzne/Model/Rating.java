@@ -1,9 +1,6 @@
 package pl.interfejsygraficzne.Model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import lombok.Data;
 
 @Entity
@@ -11,11 +8,11 @@ import lombok.Data;
 public class Rating {
 
     @Id
-    @GeneratedValue
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long ratingId;
     private Double plot;
     private Double acting;
     private Double scenography;
-    @ManyToOne
+    @OneToOne(mappedBy = "rating")
     private Movie movie;
 }
