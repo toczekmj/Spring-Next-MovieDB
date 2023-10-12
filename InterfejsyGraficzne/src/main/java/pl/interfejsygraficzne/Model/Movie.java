@@ -1,5 +1,6 @@
 package pl.interfejsygraficzne.Model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -20,6 +21,11 @@ public class Movie {
     @ManyToMany
     private List<Actor> actors;
 
+
     @OneToMany(mappedBy = "movie")
     private List<Comment> comments;
+
+    public void addComment(Comment comment) {
+        comments.add(comment);
+    }
 }
