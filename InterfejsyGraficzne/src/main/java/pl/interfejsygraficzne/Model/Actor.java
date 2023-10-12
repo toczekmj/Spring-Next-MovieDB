@@ -10,7 +10,7 @@ import java.util.List;
 public class Actor {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long actorId;
     private String firstName;
     private String lastName;

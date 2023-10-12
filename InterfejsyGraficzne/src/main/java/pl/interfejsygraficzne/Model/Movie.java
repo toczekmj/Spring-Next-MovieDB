@@ -12,7 +12,7 @@ import java.util.List;
 public class Movie {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long movieId;
     private String title;
     private String director;

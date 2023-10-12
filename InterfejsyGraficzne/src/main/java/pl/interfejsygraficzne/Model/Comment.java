@@ -11,7 +11,7 @@ import org.apache.logging.log4j.message.LoggerNameAwareMessage;
 public class Comment {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String text;
     @JsonIgnore
