@@ -21,6 +21,14 @@ public class RatingService {
 
         Movie movie = movieRepository.findById(movieid).orElseThrow(MovieNotFoundException::new);
         Rating currentRating = movie.getRating();
+        if(currentRating == null){
+            currentRating = new Rating();
+            currentRating.setMovieId(movie.getMovieId());
+            currentRating.setPlot(0);
+            currentRating.setScenography(0);
+            currentRating.setActing(0);
+            currentRating.setVotesCount(0);
+        }
 
         currentRating.setPlot(rating.getPlot()+currentRating.getPlot());
         currentRating.setActing(rating.getActing()+currentRating.getActing());
