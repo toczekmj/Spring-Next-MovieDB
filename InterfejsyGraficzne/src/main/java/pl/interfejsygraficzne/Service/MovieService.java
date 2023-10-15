@@ -2,6 +2,7 @@ package pl.interfejsygraficzne.Service;
 
 import org.springframework.stereotype.Service;
 import pl.interfejsygraficzne.Model.Movie;
+import pl.interfejsygraficzne.Model.Rating;
 import pl.interfejsygraficzne.Repository.IMovieRepository;
 import pl.interfejsygraficzne.exception.MovieNotFoundException;
 
@@ -18,10 +19,6 @@ public class MovieService {
 
     public Movie saveMovie(Movie movie){
         return repository.save(movie);
-    }
-
-    public List<Movie> saveUsers(List<Movie> movies){
-        return repository.saveAll(movies);
     }
 
     public List<Movie> getMovies(){
@@ -49,6 +46,19 @@ public class MovieService {
         existingMovie.setRating(movie.getRating());
         existingMovie.setActors(movie.getActors());
         return repository.save(existingMovie);
+    }
+
+    public Rating getCalculatedRating(Long id){
+        Movie movie = getMovieById(id);
+        Rating rating = movie.getRating();
+        Rating output = new Rating();
+        output.setMovieId(rating.getMovieId());
+        output.setRatingId(rating.getRatingId());
+        output.setActing(rating.getActing()/rating.getVotesCount());
+        output.setScenography(rating.getScenography()/rating.getVotesCount());
+        output.setPlot(rating.getPlot()/rating.getVotesCount());
+        output.setVotesCount(rating.getVotesCount());
+        return output;
     }
 
 }
