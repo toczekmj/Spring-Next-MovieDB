@@ -1,16 +1,16 @@
  docker_build() {
-   echo "arg1: '$1'"
   docker build --tag "$1" .
 }
 
 docker_run_detached() {
-  echo "arg1: '$1' and arg2 '$2'"
-  docker run -d -p 8080:8080 --name "$1" "$2"
+  docker run -d -p 80:8080 --name "$1" "$2"
 }
 
 docker_clear (){
-  read -p "Enter the name for the Docker Container (default: spring-boot-container): " container_name
-  read -p "Enter the name for the Docker Image (default: spring-boot-image): " img_name
+  if [ "$1" == "UPDATE" ]; then
+    read -p "Enter the name for the Docker Container (default: spring-boot-container): " container_name
+    read -p "Enter the name for the Docker Image (default: spring-boot-image): " img_name
+  fi
   img_name=${container_name:-spring-boot-image}
   container_name=${container_name:-spring-boot-container}
   docker stop "$container_name"
@@ -42,8 +42,8 @@ autostart() {
 
 if [ "$1" == "UPDATE" ]; then
   echo "============UPDATE MODE============"
-  docker_clear
-  autostart
+  docker_clear "$1"
+  autostart "$1"
   exit 0
 fi
 
