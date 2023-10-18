@@ -3,7 +3,7 @@
 }
 
 docker_run_detached() {
-  docker run -d -p 80:8080 --name "$1" "$2"
+  docker run -d -p 80:80 --name "$1" "$2"
 }
 
 docker_clear (){
