@@ -8,6 +8,16 @@ docker_run_detached() {
   docker run -d -p 8080:8080 --name "$1" "$2"
 }
 
+docker_clear (){
+  read -p "Enter the name for the Docker Container (default: spring-boot-container): " container_name
+  read -p "Enter the name for the Docker Image (default: spring-boot-image): " img_name
+  img_name=${container_name:-spring-boot-image}
+  container_name=${container_name:-spring-boot-container}
+  docker stop "$container_name"
+  docker rm "$container_name"
+  docker image rm "$img_name"
+}
+
 autostart() {
   default_image_name="spring-boot-image"
   default_container_name="spring-boot-container"
@@ -32,6 +42,7 @@ autostart() {
 
 if [ "$1" == "UPDATE" ]; then
   echo "============UPDATE MODE============"
+  docker_clear
   autostart
   exit 0
 fi
@@ -106,13 +117,7 @@ while true; do
             docker image rm "$img_name"
             ;;
         9)
-            read -p "Enter the name for the Docker Container (default: spring-boot-container): " container_name
-            read -p "Enter the name for the Docker Image (default: spring-boot-image): " img_name
-            img_name=${container_name:-spring-boot-image}
-            container_name=${container_name:-spring-boot-container}
-            docker stop "$container_name"
-            docker rm "$container_name"
-            docker image rm "$img_name"
+            docker_clear
             ;;
         10)
             echo "Exiting script."

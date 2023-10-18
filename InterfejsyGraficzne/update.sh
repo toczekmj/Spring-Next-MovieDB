@@ -16,7 +16,7 @@ else
         git pull;
         sudo chmod +x run.sh
         sudo chmod +x update.sh
-        sh ./update.sh UPDATE
+        source ./run.sh UPDATE
     fi
 fi
 
