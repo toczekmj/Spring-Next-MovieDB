@@ -1,3 +1,41 @@
+ docker_build() {
+   echo "arg1: '$1'"
+  docker build --tag "$1" .
+}
+
+docker_run_detached() {
+  echo "arg1: '$1' and arg2 '$2'"
+  docker run -d -p 8080:8080 --name "$1" "$2"
+}
+
+autostart() {
+  default_image_name="spring-boot-image"
+  default_container_name="spring-boot-container"
+
+  if [[ "$(docker images -q $default_image_name 2> /dev/null)" == "" ]]; then
+    echo "Default image not found! Creating '$default_image_name'..."
+    docker_build $default_image_name
+  else
+    echo "Default image already exist. Skipping..."
+  fi
+
+  if ! docker ps -a --filter "name=$default_container_name" --format "{{.Names}}" | grep -q "$default_container_name"; then
+    echo "Default container not found! Creating '$default_container_name'..."
+    docker_run_detached $default_container_name $default_image_name
+  else
+    echo "Default container already exist. Skipping..."
+  fi
+
+  echo "Starting '$default_container_name' container..."
+  docker start "$default_container_name"
+}
+
+if [ "$1" == "UPDATE" ]; then
+  echo "============UPDATE MODE============"
+  autostart
+  exit 0
+fi
+
 while true; do
     echo "Please choose an option:"
     echo "================AUTO SETUP================"
@@ -26,37 +64,19 @@ while true; do
 
     case $choice in
         0)
-          default_image_name="spring-boot-image"
-          default_container_name="spring-boot-container"
-
-          if [[ "$(docker images -q $default_image_name 2> /dev/null)" == "" ]]; then
-            echo "Default image not found! Creating '$default_image_name'..."
-            docker build --tag "$default_image_name" .
-          else
-            echo "Default image already exist. Skipping..."
-          fi
-
-          if ! docker ps -a --filter "name=$default_container_name" --format "{{.Names}}" | grep -q "$default_container_name"; then
-              echo "Default container not found! Creating '$default_container_name'..."
-              docker run -d -p 8080:8080 --name "$default_container_name" "$default_image_name"
-          else
-            echo "Default container already exist. Skipping..."
-          fi
-
-          echo "Starting '$default_container_name' container..."
-          docker start "$default_container_name"
+          autostart
           ;;
         1)
           read -p "Enter the name for the Docker Image (default: spring-boot-image): " img_name
           img_name=${container_name:-spring-boot-image}
-          docker build --tag "$img_name" .
+          docker_build "$img_name"
           ;;
         2)
             read -p "Enter the name for the Docker Container (default: spring-boot-container): " container_name
             read -p "Enter the name for the Docker Image (default: spring-boot-image): " img_name
             img_name=${container_name:-spring-boot-image}
             container_name=${container_name:-spring-boot-container}
-            docker run -d -p 8080:8080 --name "$container_name" "$img_name"
+            docker_run_detached "$container_name" "$img_name"
             ;;
         3)
               docker images -a
