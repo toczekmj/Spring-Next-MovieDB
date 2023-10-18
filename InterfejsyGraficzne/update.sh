@@ -1,7 +1,7 @@
 # shellcheck disable=SC2034
 MAIN_BRANCH="main"
-RUN_PATH="/home/ec2-user/Interfejsy-Graficzne/InterfejsyGraficzne/run.sh"
-UPDATE_PATH="/home/ec2-user/Interfejsy-Graficzne/InterfejsyGraficzne/update.sh"
+RUN_PATH="./run.sh"
+UPDATE_PATH="./update.sh"
 CURRENT_BRANCH=$(git symbolic-ref --short HEAD 2>/dev/null)
 
 if [ "$CURRENT_BRANCH" != "$MAIN_BRANCH" ]; then
