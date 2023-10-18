@@ -7,7 +7,7 @@ docker_run_detached() {
 }
 
 docker_clear (){
-  if [ "$1" == "UPDATE" ]; then
+  if [ ! "$1" == "UPDATE" ]; then
     read -p "Enter the name for the Docker Container (default: spring-boot-container): " container_name
     read -p "Enter the name for the Docker Image (default: spring-boot-image): " img_name
   fi
