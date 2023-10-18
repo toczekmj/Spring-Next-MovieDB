@@ -1,8 +1,7 @@
 # shellcheck disable=SC2034
 MAIN_BRANCH="main"
-RUN_PATH="./run.sh"
-UPDATE_PATH="./update.sh"
 CURRENT_BRANCH=$(git symbolic-ref --short HEAD 2>/dev/null)
+git fetch
 
 if [ "$CURRENT_BRANCH" != "$MAIN_BRANCH" ]; then
   echo "This script is designed to run in MAIN branch only."
@@ -15,9 +14,9 @@ else
         echo "Directory is outdated with the '$MAIN_BRANCH' branch."
         echo "UPDATING..."
         git pull;
-        sudo chmod +x $RUN_PATH
-        sudo chmod +x $UPDATE_PATH
-        sh "$RUN_PATH UPDATE"
+        sudo chmod +x run.sh
+        sudo chmod +x update.sh
+        sh ./update.sh UPDATE
     fi
 fi
 
