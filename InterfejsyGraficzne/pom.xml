@@ -11,12 +11,19 @@
     <groupId>pl</groupId>
     <artifactId>InterfejsyGraficzne</artifactId>
     <version>0.0.1-SNAPSHOT</version>
+    <packaging>jar</packaging>
+
     <name>InterfejsyGraficzne</name>
     <description>InterfejsyGraficzne</description>
     <properties>
         <java.version>17</java.version>
     </properties>
     <dependencies>
+            <dependency>
+                <groupId>org.springframework.vault</groupId>
+                <artifactId>spring-vault-core</artifactId>
+                <version>3.0.2</version>
+            </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -56,6 +63,8 @@
         </dependency>
 
     </dependencies>
+
+
 
     <build>
         <plugins>
