@@ -38,7 +38,7 @@ while true; do
 
           if ! docker ps -a --filter "name=$default_container_name" --format "{{.Names}}" | grep -q "$default_container_name"; then
               echo "Default container not found! Creating '$default_container_name'..."
-              docker run -p 8080:8080 --name "$default_container_name" "$default_image_name"
+              docker run -d -p 8080:8080 --name "$default_container_name" "$default_image_name"
           else
             echo "Default container already exist. Skipping..."
           fi
@@ -56,7 +56,7 @@ while true; do
             read -p "Enter the name for the Docker Image (default: spring-boot-image): " img_name
             img_name=${container_name:-spring-boot-image}
             container_name=${container_name:-spring-boot-container}
-            docker run -p 8080:8080 --name "$container_name" "$img_name"
+            docker run -d -p 8080:8080 --name "$container_name" "$img_name"
             ;;
         3)
               docker images -a
@@ -110,5 +110,3 @@ while true; do
     echo ""
 done
 
-
-#docker run -p 8080:8080 interfejsy-docker
