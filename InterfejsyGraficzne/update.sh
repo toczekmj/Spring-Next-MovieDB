@@ -17,7 +17,7 @@ else
         git pull;
         sudo chmod +x $RUN_PATH
         sudo chmod +x $UPDATE_PATH
-        sh ".$RUN_PATH UPDATE"
+        sh "$RUN_PATH UPDATE"
     fi
 fi
 
