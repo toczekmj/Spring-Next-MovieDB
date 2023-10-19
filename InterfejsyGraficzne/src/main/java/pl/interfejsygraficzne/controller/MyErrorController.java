@@ -9,7 +9,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class MyErrorController implements ErrorController {
     @RequestMapping("/error")
     public void Error(HttpServletResponse response){
-        response.setHeader("Location", "http://api.projektimdb.it/swagger-ui/index.html");
+        response.setHeader("Location", "https://google.com");
+//        response.setHeader("Location", "http://api.projektimdb.it/swagger-ui/index.html");
         response.setStatus(302);
 //        return """
 //                Pewnie szukasz tego xd
