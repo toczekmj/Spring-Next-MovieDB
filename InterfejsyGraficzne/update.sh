@@ -1,7 +1,6 @@
 # shellcheck disable=SC2034
 MAIN_BRANCH="main"
 
-while true; do
   CURRENT_BRANCH=$(git symbolic-ref --short HEAD 2>/dev/null)
   git fetch
 
@@ -19,11 +18,8 @@ while true; do
           sudo chmod +x run.sh
           sudo chmod +x update.sh
           source ./run.sh UPDATE
-          source ./update.sh
-          exit 0;
       fi
   fi
-  sleep 600
-done
+
 
 
