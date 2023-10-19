@@ -1,4 +1,6 @@
- docker_build() {
+#!/bin/bash
+
+docker_build() {
   docker build --tag "$1" .
 }
 
