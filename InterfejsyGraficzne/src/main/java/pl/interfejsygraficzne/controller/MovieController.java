@@ -60,7 +60,7 @@ public class MovieController {
         return actorService.attachActorToMovie(movieid, actorid);
     }
 
-    @PutMapping("/movies/{movieid}/actors/{actorid}")
+    @DeleteMapping("/movies/{movieid}/actors/{actorid}")
     public void removeActor(@PathVariable Long movieid, @PathVariable Long actorid) {
         actorService.removeActor(movieid, actorid);
     }

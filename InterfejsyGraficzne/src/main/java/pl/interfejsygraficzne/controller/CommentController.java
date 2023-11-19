@@ -23,21 +23,20 @@ public class CommentController {
         return commentService.saveComment(comment, id);
     }
     // trzeba dac endpoint w moviecontroller zeby dla danego movie wszystkie komentarze bralo
+
     @GetMapping("/comments")
-    public List<Comment> getAllComments() {
-        return commentService.getComments();
+    public List<Comment> getAllComments(@RequestParam("text") String text) {
+        if (text == null) {
+            return commentService.getComments();
+        } else {
+            return commentService.getCommentContaining(text);
+        }
     }
 
     @GetMapping("/comments/{id}")
     public Comment getCommentById(@PathVariable Long id) {
         return commentService.getCommentById(id);
     }
-
-    @GetMapping("/comments")
-    public List<Comment> getCommentContaining(@RequestParam String text) {
-        return commentService.getCommentContaining(text);
-    }
-
 
     @DeleteMapping("/comments/{id}")
     public String deleteUser(@PathVariable Long id){
