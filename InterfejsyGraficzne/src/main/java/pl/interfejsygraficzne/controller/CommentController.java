@@ -9,6 +9,7 @@ import pl.interfejsygraficzne.Service.MovieService;
 import java.util.List;
 
 @RestController
+@RequestMapping("/api/v1")
 public class CommentController {
 
     private final CommentService commentService;
@@ -17,28 +18,28 @@ public class CommentController {
         this.commentService = commentService;
     }
 
-    @PutMapping("/movie/{id}/addcomment")
+    @PutMapping("/movies/{id}/comments")
     public Comment addComment(@RequestBody Comment comment, @PathVariable Long id) {
         return commentService.saveComment(comment, id);
     }
-
-    @GetMapping("/getallcomments")
+    // trzeba dac endpoint w moviecontroller zeby dla danego movie wszystkie komentarze bralo
+    @GetMapping("/comments")
     public List<Comment> getAllComments() {
         return commentService.getComments();
     }
 
-    @GetMapping("/getcommentbyid/{id}")
+    @GetMapping("/comments/{id}")
     public Comment getCommentById(@PathVariable Long id) {
         return commentService.getCommentById(id);
     }
 
-    @GetMapping("/getcommentcontaining/{text}")
-    public List<Comment> getCommentContaining(@PathVariable String text) {
+    @GetMapping("/comments")
+    public List<Comment> getCommentContaining(@RequestParam String text) {
         return commentService.getCommentContaining(text);
     }
 
 
-    @DeleteMapping("/deletecomment/{id}")
+    @DeleteMapping("/comments/{id}")
     public String deleteUser(@PathVariable Long id){
         return commentService.deleteComment(id);
     }
