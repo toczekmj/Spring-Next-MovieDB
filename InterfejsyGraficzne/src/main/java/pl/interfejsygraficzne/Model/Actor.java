@@ -15,24 +15,12 @@ public class Actor {
     private Long actorId;
     private String firstName;
     private String lastName;
-    @ManyToMany(
-            cascade = CascadeType.ALL
-    )
+    @ManyToMany
     @JoinTable(
-            name="actor_movie_map",
-            joinColumns = @JoinColumn(
-                    name = "actor_id",
-                    referencedColumnName = "actorId"
-            ),
-            inverseJoinColumns = @JoinColumn(
-                    name = "movie_id",
-                    referencedColumnName = "movieId"
-            )
+            name="movies_acted",
+            joinColumns = @JoinColumn(name = "actor_id"),
+            inverseJoinColumns = @JoinColumn(name = "movie_id")
     )
     @JsonIgnore
     private List<Movie> movies;
-
-    public void addMovie(Movie movie){
-        movies.add(movie);
-    }
 }

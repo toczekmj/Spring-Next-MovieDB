@@ -56,7 +56,12 @@ public class MovieController {
 
     @PutMapping("/movie/{movieid}/addactor/{actorid}")
     public Actor addActor(@PathVariable Long movieid, @PathVariable Long actorid) {
-        return actorService.addActor(movieid, actorid);
+        return actorService.attachActorToMovie(movieid, actorid);
+    }
+
+    @PutMapping("/movie/{movieid}/removeactor/{actorid}")
+    public void removeActor(@PathVariable Long movieid, @PathVariable Long actorid) {
+        actorService.removeActor(movieid, actorid);
     }
 
     @GetMapping("/movie/{id}/getrating")

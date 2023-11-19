@@ -31,5 +31,11 @@ public class Movie {
 
     public void addActor(Actor actor){
         actors.add(actor);
+        actor.getMovies().add(this);
+    }
+
+    public void removeActor(Actor actor){
+        this.actors.remove(actor);
+        actor.getMovies().remove(this);
     }
 }
