@@ -37,8 +37,8 @@ public class DatabaseSeeder {
     @EventListener
     @Order(0)
     private void seed(ContextRefreshedEvent event){
-        seedActors();
-        seedMovies();
+//        seedActors();
+//        seedMovies();
     }
 
     private void seedActors() {

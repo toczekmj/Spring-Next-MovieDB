@@ -16,12 +16,12 @@ public class ActorController {
         this.actorService = actorService;
     }
 
-    @PostMapping("/actors")
+    @PostMapping("/actors/new")
     public Actor newActor(@RequestBody Actor actor){
         return actorService.newActor(actor);
     }
 
-    @GetMapping("/actors")
+    @GetMapping("/actors/get/all")
     public List<Actor> getAllActors(){
         return actorService.getAllActors();
     }

@@ -24,53 +24,53 @@ public class MovieController {
         this.ratingService = ratingService;
     }
 
-    @PostMapping("/movies")
+    @PostMapping("/movies/add")
     public Movie addMovie(@RequestBody Movie user){
         return movieService.saveMovie(user);
     }
 
-    @GetMapping("/movies")
+    @GetMapping("/movies/get/all")
     public List<Movie> getAllMovies(){
         return movieService.getMovies();
     }
 
-    @GetMapping("/movies/{id}")
+    @GetMapping("/movies/get/byid/{id}")
     public Movie findMovieById(@PathVariable Long id){
         return movieService.getMovieById(id);
     }
 
-    @GetMapping("/movies/{name}")
+    @GetMapping("/movies/get/byname/{name}")
     public List<Movie> findMoviesByFirstName(@PathVariable String name){
         return movieService.getMoviesByTitle(name);
     }
 
-    @PutMapping("/movies")
+    @PutMapping("/movies/updatemovie")
     public Movie updateMovie(@RequestBody Movie movie){
         return movieService.updateMovie(movie);
     }
 
-    @DeleteMapping("/movies/{id}")
+    @DeleteMapping("/movies/delete/byid/{id}")
     public String deleteMovie(@PathVariable Long id){
         return movieService.deleteMovie(id);
     }
 
 
-    @PutMapping("/movies/{movieid}/actors/{actorid}")
+    @PutMapping("/movies/byid/{movieid}/actors/delete/byid/{actorid}")
     public Actor addActor(@PathVariable Long movieid, @PathVariable Long actorid) {
         return actorService.attachActorToMovie(movieid, actorid);
     }
 
-    @DeleteMapping("/movies/{movieid}/actors/{actorid}")
+    @DeleteMapping("/movies/byid/{movieid}/actors/delete/byid/{actorid}")
     public void removeActor(@PathVariable Long movieid, @PathVariable Long actorid) {
         actorService.removeActor(movieid, actorid);
     }
 
-    @GetMapping("/movies/{id}/ratings")
+    @GetMapping("/movies/get/byid/{id}/getrating")
     public Rating getRating(@PathVariable Long id){
         return movieService.getCalculatedRating(id);
     }
 
-    @PutMapping("/movies/{movieid}/ratings")
+    @PutMapping("/movies/{movieid}/rating")
     public Movie addRating(@PathVariable Long movieid, @RequestBody Rating rating){
         return ratingService.addRating(movieid, rating);
     }
