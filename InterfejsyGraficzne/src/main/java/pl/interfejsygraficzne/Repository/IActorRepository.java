@@ -24,4 +24,12 @@ public interface IActorRepository extends JpaRepository<Actor, Long> {
             nativeQuery = true
     )
     void restoreAutoIncrement();
+
+    @Modifying
+    @Transactional
+    @Query(
+            value = "DELETE FROM movies_acted",
+            nativeQuery = true
+    )
+    void deleteActing();
 }

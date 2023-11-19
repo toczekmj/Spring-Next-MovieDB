@@ -4,7 +4,6 @@ package pl.interfejsygraficzne.controller;
 import org.springframework.web.bind.annotation.*;
 import pl.interfejsygraficzne.Model.Comment;
 import pl.interfejsygraficzne.Service.CommentService;
-import pl.interfejsygraficzne.Service.MovieService;
 
 import java.util.List;
 
@@ -22,7 +21,6 @@ public class CommentController {
     public Comment addComment(@RequestBody Comment comment, @PathVariable Long id) {
         return commentService.saveComment(comment, id);
     }
-    // trzeba dac endpoint w moviecontroller zeby dla danego movie wszystkie komentarze bralo
 
     @GetMapping("/comments")
     public List<Comment> getAllComments(@RequestParam("text") String text) {

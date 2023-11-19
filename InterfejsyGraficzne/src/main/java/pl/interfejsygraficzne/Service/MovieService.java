@@ -1,6 +1,7 @@
 package pl.interfejsygraficzne.Service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import pl.interfejsygraficzne.Model.Movie;
 import pl.interfejsygraficzne.Model.Rating;
 import pl.interfejsygraficzne.Repository.IMovieRepository;
@@ -9,6 +10,7 @@ import pl.interfejsygraficzne.exception.MovieNotFoundException;
 import java.util.List;
 
 @Service
+@Transactional
 public class MovieService {
     private final IMovieRepository repository;
 
@@ -35,7 +37,7 @@ public class MovieService {
 
     public String deleteMovie(Long id){
         repository.deleteById(id);
-        return "User " + id + " removed";
+        return "Movieid " + id + " removed";
     }
 
     public Movie updateMovie(Movie movie){

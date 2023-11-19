@@ -1,6 +1,7 @@
 package pl.interfejsygraficzne.Service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import pl.interfejsygraficzne.Model.Comment;
 import pl.interfejsygraficzne.Model.Movie;
 import pl.interfejsygraficzne.Repository.ICommentRepository;
@@ -9,6 +10,7 @@ import pl.interfejsygraficzne.Repository.IMovieRepository;
 import java.util.List;
 
 @Service
+@Transactional
 public class CommentService {
 
     private final ICommentRepository commentRepository;

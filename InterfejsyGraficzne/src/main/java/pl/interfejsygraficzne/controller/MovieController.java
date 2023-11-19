@@ -2,6 +2,7 @@ package pl.interfejsygraficzne.controller;
 
 import org.springframework.web.bind.annotation.*;
 import pl.interfejsygraficzne.Model.Actor;
+import pl.interfejsygraficzne.Model.Comment;
 import pl.interfejsygraficzne.Model.Movie;
 import pl.interfejsygraficzne.Model.Rating;
 import pl.interfejsygraficzne.Service.ActorService;
@@ -17,7 +18,6 @@ public class MovieController {
     private final MovieService movieService;
     private final ActorService actorService;
     private final RatingService ratingService;
-
     public MovieController(MovieService service, ActorService actorService, RatingService ratingService) {
         this.movieService = service;
         this.actorService = actorService;
@@ -65,14 +65,20 @@ public class MovieController {
         actorService.removeActor(movieid, actorid);
     }
 
-    @GetMapping("/movies/get/byid/{id}/getrating")
-    public Rating getRating(@PathVariable Long id){
-        return movieService.getCalculatedRating(id);
+    @GetMapping("/movies/get/rating/{movieid}")
+    public Rating getRating(@PathVariable Long movieid){
+        return movieService.getCalculatedRating(movieid);
     }
 
     @PutMapping("/movies/{movieid}/rating")
     public Movie addRating(@PathVariable Long movieid, @RequestBody Rating rating){
         return ratingService.addRating(movieid, rating);
+    }
+
+    @GetMapping("/movies/get/comments/{movieid}")
+    public List<Comment> getMovieComments(@PathVariable Long movieid){
+        Movie movie = movieService.getMovieById(movieid);
+        return movie.getComments();
     }
 
 

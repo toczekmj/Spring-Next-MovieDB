@@ -18,11 +18,11 @@ public class Movie {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "rating_id", referencedColumnName = "ratingId")
     private Rating rating;
-    @ManyToMany(mappedBy = "movies")
+    @ManyToMany(mappedBy = "movies", cascade = CascadeType.REMOVE)
     private List<Actor> actors;
 
 
-    @OneToMany(mappedBy = "movie")
+    @OneToMany(mappedBy = "movie", cascade = CascadeType.REMOVE)
     private List<Comment> comments;
 
     public void addComment(Comment comment) {
