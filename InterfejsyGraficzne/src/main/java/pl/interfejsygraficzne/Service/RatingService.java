@@ -4,17 +4,31 @@ import org.springframework.stereotype.Service;
 import pl.interfejsygraficzne.Model.Movie;
 import pl.interfejsygraficzne.Model.Rating;
 import pl.interfejsygraficzne.Repository.IMovieRepository;
+import pl.interfejsygraficzne.Repository.IRatingRepository;
 import pl.interfejsygraficzne.exception.MovieNotFoundException;
 
 @Service
 public class RatingService {
     private final IMovieRepository movieRepository;
     private final MovieService movieService;
+    private final IRatingRepository ratingRepository;
 
     public RatingService(IMovieRepository movieRepository,
-                         MovieService movieService){
+                         MovieService movieService,
+                         IRatingRepository ratingRepository){
         this.movieRepository = movieRepository;
         this.movieService = movieService;
+        this.ratingRepository = ratingRepository;
+    }
+
+    private Rating createNewRating(Long movieID){
+        Rating r = new Rating();
+        r.setMovieId(movieID);
+        r.setPlot(0);
+        r.setScenography(0);
+        r.setActing(0);
+        r.setVotesCount(0);
+        return ratingRepository.save(r);
     }
 
     public Movie addRating(Long movieid, Rating rating){
@@ -22,12 +36,7 @@ public class RatingService {
         Movie movie = movieRepository.findById(movieid).orElseThrow(MovieNotFoundException::new);
         Rating currentRating = movie.getRating();
         if(currentRating == null){
-            currentRating = new Rating();
-            currentRating.setMovieId(movie.getMovieId());
-            currentRating.setPlot(0);
-            currentRating.setScenography(0);
-            currentRating.setActing(0);
-            currentRating.setVotesCount(0);
+            currentRating = createNewRating(movieid);
         }
 
         currentRating.setPlot(rating.getPlot()+currentRating.getPlot());
@@ -35,6 +44,7 @@ public class RatingService {
         currentRating.setScenography(rating.getScenography()+currentRating.getScenography());
         currentRating.setVotesCount(currentRating.getVotesCount()+1);
         movie.setRating(currentRating);
+
         movieService.updateMovie(movie);
         return movie;
     }
