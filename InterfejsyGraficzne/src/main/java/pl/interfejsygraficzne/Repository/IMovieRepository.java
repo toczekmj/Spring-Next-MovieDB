@@ -35,5 +35,5 @@ public interface IMovieRepository extends JpaRepository<Movie, Long> {
             value = "DELETE FROM movie",
             nativeQuery = true
     )
-    void PrepareForSeeding();
+    void DeleteData();
 }

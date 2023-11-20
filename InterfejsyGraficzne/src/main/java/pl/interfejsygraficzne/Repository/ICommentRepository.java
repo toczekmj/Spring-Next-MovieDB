@@ -19,5 +19,21 @@ public interface ICommentRepository extends JpaRepository<Comment, Long> {
             value = "DELETE FROM comment",
             nativeQuery = true
     )
-    void PrepareForSeeding();
+    void DeleteData();
+
+    @Modifying
+    @Transactional
+    @Query(
+            value = "ALTER TABLE comment AUTO_INCREMENT = 0",
+            nativeQuery = true
+    )
+    void setIdCounterToZero();
+
+    @Modifying
+    @Transactional
+    @Query(
+            value = "ALTER TABLE comment AUTO_INCREMENT = 1",
+            nativeQuery = true
+    )
+    void setIdCounterToAuto();
 }

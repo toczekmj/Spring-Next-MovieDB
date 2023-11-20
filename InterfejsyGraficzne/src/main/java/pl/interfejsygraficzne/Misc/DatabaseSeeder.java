@@ -4,6 +4,7 @@ import com.github.javafaker.Faker;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.annotation.Order;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import pl.interfejsygraficzne.Model.Actor;
 import pl.interfejsygraficzne.Model.Comment;
@@ -20,12 +21,14 @@ import pl.interfejsygraficzne.Service.RatingService;
 
 import java.util.ArrayList;
 import java.util.Locale;
+import java.util.Objects;
 
 import static java.lang.Integer.valueOf;
 
 @Component
 public class DatabaseSeeder {
 
+    private final Environment env;
     private final IActorRepository actorRepository;
     private final IMovieRepository movieRepository;
     private final ICommentRepository commentRepository;
@@ -49,7 +52,8 @@ public class DatabaseSeeder {
                           ActorService actorService,
                           MovieService movieService,
                           CommentService commentService,
-                          RatingService ratingService
+                          RatingService ratingService,
+                          Environment env
                         )
     {
         this.actorRepository = actorRepository;
@@ -60,15 +64,17 @@ public class DatabaseSeeder {
         this.commentService = commentService;
         this.commentRepository = commentRepository;
         this.ratingService = ratingService;
+        this.env = env;
     }
-    @EventListener
+    @EventListener(ContextRefreshedEvent.class)
     @Order(0)
-    private void seed(ContextRefreshedEvent event){
+    public void seed(ContextRefreshedEvent event){
         faker = new Faker(Locale.ENGLISH);
-//        TODO: uruchamianie seedowanie tylko jesli parametr
-
-        seedActors();
-        seedMovies();
+        String path = env.getProperty("seed.on.startup");
+        if(Objects.requireNonNull(path).equalsIgnoreCase("true")){
+            seedActors();
+            seedMovies();
+        }
     }
 
     private void seedActors() {
@@ -87,11 +93,13 @@ public class DatabaseSeeder {
     }
 
     private void seedMovies(){
-        //remove all unnecessary stuff from database
-        commentRepository.PrepareForSeeding();
-        movieRepository.PrepareForSeeding();
-        ratingRepository.PrepareForSeeding();
+        //remove all unnecessary stuff from database and reset ID's
+        commentRepository.DeleteData();
+        movieRepository.DeleteData();
+        ratingRepository.DeleteData();
         movieRepository.setIdCounterToZero();
+        commentRepository.setIdCounterToZero();
+        ratingRepository.setIdCounterToZero();
 
 
         //create new movie and add Actors, Comments, and Rating
@@ -134,6 +142,9 @@ public class DatabaseSeeder {
             }
 
         }
+
+        ratingRepository.setIdCounterToAuto();
+        commentRepository.setIdCounterToAuto();
         movieRepository.setIdCounterToAuto();
     }
 

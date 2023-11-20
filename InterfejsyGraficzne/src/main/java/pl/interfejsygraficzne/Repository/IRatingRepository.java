@@ -15,5 +15,19 @@ public interface IRatingRepository extends JpaRepository<Rating, Long> {
             value = "DELETE FROM rating",
             nativeQuery = true
     )
-    void PrepareForSeeding();
+    void DeleteData();
+    @Modifying
+    @Transactional
+    @Query(
+            value = "ALTER TABLE movie AUTO_INCREMENT = 1",
+            nativeQuery = true
+    )
+    void setIdCounterToAuto();
+    @Modifying
+    @Transactional
+    @Query(
+            value = "ALTER TABLE movie AUTO_INCREMENT = 0",
+            nativeQuery = true
+    )
+    void setIdCounterToZero();
 }
