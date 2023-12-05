@@ -1,0 +1,4 @@
+{
+  "*": "yarn run format:auto:selected",
+  "*.(js|jsx|ts|tsx)": "yarn run lint:auto:selected"
+}
