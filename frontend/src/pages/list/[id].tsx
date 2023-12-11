@@ -10,43 +10,56 @@ import React from "react";
 import useSWR from "swr";
 import {useRouter} from "next/router";
 
-const fetcher = (...args: Parameters<typeof fetch>) =>
-    fetch(...args).then((res) => res.json());
+const fetcher = (url: string, options?: RequestInit) => fetch(url, options).then((res) => res.json());
+interface Actor {
+    firstName: string;
+    lastName: string;
+}
 
+const fetchActors = function (actorsList: Actor[]) {
+    const aList: string[] = [];
+    for (let i = 0; i < actorsList.length; i++) {
+        aList.push(actorsList[i].firstName + " " + actorsList[i].lastName);
+        if (i != actorsList.length - 1) {
+            aList[i] = aList[i] + ',';
+        }
+    }
+    return aList;
+};
 
-// const fetchActors = function (actorsList: any) {
-//     const aList = [];
-//     for (let i = 0; i < actorsList.length; i++) {
-//         aList.push(actorsList[i].firstName + " " + actorsList[i].lastName);
-//         if (i != actorsList.length - 1) {
-//             aList[i] = aList[i] + ',';
-//         }
-//     }
-//     return aList;
-// }
-//
-// const fetchComments = function(commentList: any) {
-//     let comments = "";
-//     for(let i = 0; i < commentList.length; i++){
-//         comments +=  "<b>Użytkownik " + commentList[i].id + "</b>: " + commentList[i].text + "<br>";
-//     }
-//     return comments;
-// }
-//
-// const fetchRating = function(rating: any){
-//     const votes: number = parseInt(rating.votesCount);
-//     const plot: number = parseInt(rating.plot);
-//     const acting: number = parseInt(rating.acting);
-//     const scenography: number = parseInt(rating.scenography)
-//     return [plot/votes, acting/votes, scenography/votes];
-// }
+interface Comment {
+    id: number;
+    text: string;
+}
 
+const fetchComments = function(commentList: Comment[]) {
+    let comments = "";
+    for (let i = 0; i < commentList.length; i++) {
+        comments += `<b>Użytkownik ${commentList[i].id}</b>: ${commentList[i].text}<br>`;
+    }
+    return comments;
+};
+interface Rating {
+    votesCount: string;
+    plot: string;
+    acting: string;
+    scenography: string;
+}
+
+const fetchRating = function(rating: Rating){
+    const votes: number = parseInt(rating.votesCount);
+    const plot: number = parseInt(rating.plot);
+    const acting: number = parseInt(rating.acting);
+    const scenography: number = parseInt(rating.scenography);
+    return [plot/votes, acting/votes, scenography/votes];
+};
 
 export default function SingleMoviePage() {
 
     const router = useRouter();
     const {id} = router.query;
-    const APIURL = `http://api.projektimdb.it/api/v1/movies/get/byid/${String(id)}`;
+
+    const APIURL = `http://api.projektimdb.it/api/v1/movies/get/byid/${id as string}`
     const {data, error} = useSWR(APIURL, fetcher);
     if (error) return <div>Failed to fetch</div>
     if (!data) return <div>Loading</div>
