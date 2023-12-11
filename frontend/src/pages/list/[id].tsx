@@ -9,8 +9,9 @@ import ReactStars from "react-rating-stars-component"
 import React from "react";
 import useSWR from "swr";
 import {useRouter} from "next/router";
-import {render} from "react-dom";
 
+// eslint-disable-next-line @typescript-eslint/no-unsafe-argument,@typescript-eslint/ban-ts-comment
+// @ts-ignore
 const fetcher = (...args: any[]) => fetch(...args).then((res) => res.json())
 
 const fetchActors = function (actorsList: any) {
