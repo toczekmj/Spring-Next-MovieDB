@@ -11,7 +11,8 @@ import useSWR from "swr";
 import {useRouter} from "next/router";
 
 // const fetcher = (...args: any[]) => fetch(...args).then((res) => res.json())
-//
+const fetcher = (...args: Parameters<typeof fetch>) =>
+    fetch(...args).then((res) => res.json());
 // const fetchActors = function (actorsList: any) {
 //     const aList = [];
 //     for (let i = 0; i < actorsList.length; i++) {
