@@ -1,38 +1,50 @@
+
 import {
   Card,
   CardBody,
   CardHeader,
-  Grid,
-  GridItem,
   Stack,
   Text,
 } from "@chakra-ui/react";
-import { useRouter } from "next/router";
 import React from "react";
+import useSWR from "swr";
+import {func} from "prop-types";
 
-import { MOVIES } from "@/features/movies/movies";
+const fetcher = (...args: any[]) => fetch(...args).then((res) => res.json())
 
-const SingleMoviePage = () => {
-  const { query } = useRouter();
+const fetchActors = function (actorsList: any) {
+  const aList = [];
+  for(let i = 0; i < actorsList.length; i++){
+    aList.push(actorsList[i].firstName + " " + actorsList[i].lastName);
+    if(i != actorsList.length-1){
+      aList[i] = aList[i] + ',';
+    }
+  }
+  return aList;
+}
 
-  const { id }: { id?: string } = query;
+export default function SingleMoviePage() {
+  const {data, error} = useSWR('http://localhost/api/v1/movies/get/byid/1', fetcher);
+  if(error) return <div>Failed to fetch</div>
+  if(!data) return <div>Loading</div>
+  const actorsList = fetchActors(data.actors);
 
-  const movie = MOVIES.find((movie) => movie.title === id);
   return (
     <Stack h="100vh" align="center" justifyContent="center" spacing={55}>
       <Card w="40%">
         <CardHeader>
           <Text fontSize="26px" fontWeight="700">
-            {movie?.title}
+            {data?.title}
           </Text>
         </CardHeader>
         <CardBody>
           {/* trzeba dopisac jakies rzeczy w stylu reżyser, aktorzy itd  */}
-
-          <Text>Dodano: {movie?.addDate}</Text>
+          {/* <Text>Dodano: {movie?.addDate}</Text> */}
           {/* <Text>{movie?.popularity}</Text> */}
-          <Text>Reżyser: ...</Text>
-          <Text>Główna obsada: ...</Text>
+          <Text>Reżyser: {data.director}</Text>
+          <Text>Rok produkcji: {data.productionYear}</Text>
+          <Text>Główna obsada: {actorsList}</Text>
+          
         </CardBody>
       </Card>
 
@@ -53,6 +65,15 @@ const SingleMoviePage = () => {
       </Card>
     </Stack>
   );
-};
+}
 
-export default SingleMoviePage;
+
+const callAPI = async () => {
+	try {
+		const res = await fetch('http://localhost/api/v1/movies/get/byid/1');
+		const data = await res.json();
+		console.log(data);
+	} catch (err) {
+		console.log(err);
+	}
+};

@@ -44,7 +44,7 @@ export const MOVIES: Array<Movies> = [
     addDate: "2021-03-12",
   },
   {
-    title: "Movie11",
+    title: "1",
     popularity: 61,
     addDate: "2021-02-12",
   },
