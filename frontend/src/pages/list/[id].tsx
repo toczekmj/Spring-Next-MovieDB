@@ -53,68 +53,74 @@ const fetchRating = function(rating: Rating){
     const scenography: number = parseInt(rating.scenography);
     return [plot/votes, acting/votes, scenography/votes];
 };
+interface MovieData {
+    actors: Actor[];
+    comments: Comment[];
+    rating: Rating;
+    title: string;
+    director: string;
+    productionYear: string;
+}
 
 export default function SingleMoviePage() {
-
     const router = useRouter();
-    const {id} = router.query;
+    const { id } = router.query;
 
-    const APIURL = `http://api.projektimdb.it/api/v1/movies/get/byid/${id as string}`
-    const {data, error} = useSWR(APIURL, fetcher);
-    if (error) return <div>Failed to fetch</div>
-    if (!data) return <div>Loading</div>
-    // const actorsList = fetchActors(data.actors);
-    // const commentList = fetchComments(data.comments);
-    // const rating = fetchRating(data.rating); //plot, acting, scenography
-    //
-    // console.log("plot: " + rating[0] + ", acting: " + rating[1] + ", scenography: " + rating[2]);
-    //
-    // return (
-    //     <Stack h="100vh" align="center" justifyContent="center" spacing={55}>
-    //         <Card w="40%">
-    //             <CardHeader>
-    //                 <Text fontSize="26px" fontWeight="700">
-    //                     {data?.title}
-    //                 </Text>
-    //             </CardHeader>
-    //
-    //             <CardBody>
-    //                 <Text><b>Reżyser:</b> {data.director}</Text>
-    //                 <Text><b>Rok produkcji:</b> {data.productionYear}</Text>
-    //                 <Text><b>Główna obsada:</b> {actorsList}</Text>
-    //                 <Text><b>Opinie telewidzów:</b></Text>
-    //                 <Text>
-    //                     Aktorstwo:
-    //                     <ReactStars count={5} value={rating[1]} size={20} isHalf={true} edit={false}></ReactStars>
-    //                 </Text>
-    //                 <Text>
-    //                     Fabuła:
-    //                     <ReactStars count={5} value={rating[0]} size={20} isHalf={true} edit={false}></ReactStars>
-    //                 </Text>
-    //                 <Text>
-    //                     Scenografia:
-    //                     <ReactStars count={5} value={rating[2]} size={20} isHalf={true} edit={false}></ReactStars>
-    //                 </Text>
-    //             </CardBody>
-    //         </Card>
-    //
-    //
-    //         {/*komentarze */}
-    //         <Card w="40%">
-    //             <CardHeader>
-    //                 <Text fontSize="26px" fontWeight="700">
-    //                     Komentarze
-    //                 </Text>
-    //             </CardHeader>
-    //             <CardBody>
-    //                 <Text dangerouslySetInnerHTML={{__html: commentList}}></Text>
-    //             </CardBody>
-    //         </Card>
-    //     </Stack>
-    // );
+    const APIURL = `http://api.projektimdb.it/api/v1/movies/get/byid/${
+        id as string
+    }`;
+    const { data, error } = useSWR<MovieData>(APIURL, fetcher);
+
+    if (error) return <div>Failed to fetch</div>;
+    if (!data) return <div>Loading</div>;
+    const actorsList = fetchActors(data.actors);
+    const commentList = fetchComments(data.comments);
+    const rating = fetchRating(data.rating);
+
 
     return (
-        <div id={"test"}>Chuj</div>
+        <Stack h="100vh" align="center" justifyContent="center" spacing={55}>
+            <Card w="40%">
+                <CardHeader>
+                    <Text fontSize="26px" fontWeight="700">
+                        {data?.title}
+                    </Text>
+                </CardHeader>
 
+                <CardBody>
+                    <Text><b>Reżyser:</b> {data.director}</Text>
+                    <Text><b>Rok produkcji:</b> {data.productionYear}</Text>
+                    <Text><b>Główna obsada:</b> {actorsList}</Text>
+                    <Text><b>Opinie telewidzów:</b></Text>
+                    <Text>
+                        Aktorstwo:
+                        <ReactStars count={5} value={rating[1]} size={20} isHalf={true} edit={false}></ReactStars>
+                    </Text>
+                    <Text>
+                        Fabuła:
+                        <ReactStars count={5} value={rating[0]} size={20} isHalf={true} edit={false}></ReactStars>
+                    </Text>
+                    <Text>
+                        Scenografia:
+                        <ReactStars count={5} value={rating[2]} size={20} isHalf={true} edit={false}></ReactStars>
+                    </Text>
+                </CardBody>
+            </Card>
+
+
+            {/*komentarze */}
+            <Card w="40%">
+                <CardHeader>
+                    <Text fontSize="26px" fontWeight="700">
+                        Komentarze
+                    </Text>
+                </CardHeader>
+                <CardBody>
+                    <Text dangerouslySetInnerHTML={{__html: commentList}}></Text>
+                </CardBody>
+            </Card>
+        </Stack>
     );
+
+
 }
