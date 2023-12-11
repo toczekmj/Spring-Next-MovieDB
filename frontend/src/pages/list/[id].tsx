@@ -10,9 +10,10 @@ import React from "react";
 import useSWR from "swr";
 import {useRouter} from "next/router";
 
-// const fetcher = (...args: any[]) => fetch(...args).then((res) => res.json())
 const fetcher = (...args: Parameters<typeof fetch>) =>
     fetch(...args).then((res) => res.json());
+
+
 // const fetchActors = function (actorsList: any) {
 //     const aList = [];
 //     for (let i = 0; i < actorsList.length; i++) {
@@ -43,14 +44,12 @@ const fetcher = (...args: Parameters<typeof fetch>) =>
 
 export default function SingleMoviePage() {
 
-    // const router = useRouter();
-    // const {id} = router.query;
-    // const APIURL = "http://api.projektimdb.it/api/v1/movies/get/byid/" + id?.toString();
-    //
-    //
-    // const {data, error} = useSWR(APIURL, fetcher);
-    // if (error) return <div>Failed to fetch</div>
-    // if (!data) return <div>Loading</div>
+    const router = useRouter();
+    const {id} = router.query;
+    const APIURL = `http://api.projektimdb.it/api/v1/movies/get/byid/${id}`;
+    const {data, error} = useSWR(APIURL, fetcher);
+    if (error) return <div>Failed to fetch</div>
+    if (!data) return <div>Loading</div>
     // const actorsList = fetchActors(data.actors);
     // const commentList = fetchComments(data.comments);
     // const rating = fetchRating(data.rating); //plot, acting, scenography
