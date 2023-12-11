@@ -1,7 +1,10 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/restrict-plus-operands */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import {
     Card,
     CardBody,
-    CardHeader, List, ListItem,
+    CardHeader,
     Stack,
     Text,
 } from "@chakra-ui/react";
@@ -10,8 +13,9 @@ import React from "react";
 import useSWR from "swr";
 import {useRouter} from "next/router";
 
-// eslint-disable-next-line @typescript-eslint/no-unsafe-argument,@typescript-eslint/ban-ts-comment
+// eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/ban-ts-comment
 // @ts-ignore
+// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
 const fetcher = (...args: any[]) => fetch(...args).then((res) => res.json())
 
 const fetchActors = function (actorsList: any) {
@@ -34,18 +38,11 @@ const fetchComments = function(commentList: any) {
 }
 
 const fetchRating = function(rating: any){
-
-
-
     const votes: number = parseInt(rating.votesCount);
     const plot: number = parseInt(rating.plot);
     const acting: number = parseInt(rating.acting);
     const scenography: number = parseInt(rating.scenography)
-
     return [plot/votes, acting/votes, scenography/votes];
-
-
-
 }
 
 
