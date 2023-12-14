@@ -2,6 +2,7 @@ package pl.interfejsygraficzne.controller;
 
 
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 import pl.interfejsygraficzne.Model.Comment;
 import pl.interfejsygraficzne.Service.CommentService;
@@ -20,7 +21,7 @@ public class CommentController {
 
     @Operation(summary = "get all comments that belongs to the movie")
     @PutMapping("/movies/{id}/comments")
-    public Comment addComment(@RequestBody Comment comment, @PathVariable Long id) {
+    public Comment addComment(@Valid @RequestBody Comment comment, @PathVariable Long id) {
         return commentService.saveComment(comment, id);
     }
 

@@ -1,6 +1,7 @@
 package pl.interfejsygraficzne.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 import pl.interfejsygraficzne.Model.Actor;
 import pl.interfejsygraficzne.Model.Comment;
@@ -27,7 +28,7 @@ public class MovieController {
 
     @Operation(summary = "add move to the database")
     @PostMapping("/movies")
-    public Movie addMovie(@RequestBody Movie user){
+    public Movie addMovie(@Valid @RequestBody Movie user){
         return movieService.saveMovie(user);
     }
 

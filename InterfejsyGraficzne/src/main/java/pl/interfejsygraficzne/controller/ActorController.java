@@ -1,6 +1,7 @@
 package pl.interfejsygraficzne.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 import pl.interfejsygraficzne.Model.Actor;
 import pl.interfejsygraficzne.Service.ActorService;
@@ -19,7 +20,7 @@ public class ActorController {
 
     @Operation(summary = "add new actor to the database")
     @PostMapping("/actors")
-    public Actor newActor(@RequestBody Actor actor){
+    public Actor newActor(@Valid @RequestBody Actor actor){
         return actorService.newActor(actor);
     }
 
