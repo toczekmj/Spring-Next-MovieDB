@@ -1,5 +1,6 @@
 package pl.interfejsygraficzne.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.web.bind.annotation.*;
 import pl.interfejsygraficzne.Model.Actor;
 import pl.interfejsygraficzne.Service.ActorService;
@@ -16,12 +17,14 @@ public class ActorController {
         this.actorService = actorService;
     }
 
-    @PostMapping("/actors/new")
+    @Operation(summary = "add new actor to the database")
+    @PostMapping("/actors")
     public Actor newActor(@RequestBody Actor actor){
         return actorService.newActor(actor);
     }
 
-    @GetMapping("/actors/get/all")
+    @Operation(summary = "get all available actor that are currently in the database")
+    @GetMapping("/actors")
     public List<Actor> getAllActors(){
         return actorService.getAllActors();
     }
