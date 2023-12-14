@@ -1,7 +1,10 @@
 package pl.interfejsygraficzne.Model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
+import org.hibernate.validator.constraints.Range;
 
 import java.util.List;
 
@@ -12,8 +15,12 @@ public class Movie {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long movieId;
+    @NotNull(message = "Pole nie może zostać puste.")
     private String title;
+    @NotNull
     private String director;
+    @NotNull
+    @Range(min = 1800, max = 2024)
     private Integer productionYear;
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "rating_id", referencedColumnName = "ratingId")
