@@ -2,6 +2,8 @@ package pl.interfejsygraficzne.Model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 import java.util.List;
@@ -13,7 +15,11 @@ public class Actor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long actorId;
+    @NotNull
+    @Size(min = 1, max = 20)
     private String firstName;
+    @NotNull
+    @Size(min = 1, max = 20)
     private String lastName;
     @ManyToMany
     @JoinTable(

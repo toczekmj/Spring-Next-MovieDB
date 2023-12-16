@@ -1,5 +1,7 @@
 package pl.interfejsygraficzne.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 import pl.interfejsygraficzne.Model.Actor;
 import pl.interfejsygraficzne.Model.Comment;
@@ -13,6 +15,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1")
+@CrossOrigin
 public class MovieController {
 
     private final MovieService movieService;
@@ -24,63 +27,71 @@ public class MovieController {
         this.ratingService = ratingService;
     }
 
-    @PostMapping("/movies/add")
-    public Movie addMovie(@RequestBody Movie user){
+    @Operation(summary = "add move to the database")
+    @PostMapping("/movies")
+    public Movie addMovie(@Valid @RequestBody Movie user){
         return movieService.saveMovie(user);
     }
 
-    @GetMapping("/movies/get/all")
+    @Operation(summary = "get all movies from the database")
+    @GetMapping("/movies")
     public List<Movie> getAllMovies(){
         return movieService.getMovies();
     }
 
-    @GetMapping("/movies/get/byid/{id}")
+    @Operation(summary = "get movie information by id")
+    @GetMapping("/movies/{id}")
     public Movie findMovieById(@PathVariable Long id){
         return movieService.getMovieById(id);
     }
 
-    @GetMapping("/movies/get/byname/{name}")
+    @Operation(summary = "get list of movies containing a phrase in title")
+    @GetMapping("/movies/title/{name}")
     public List<Movie> findMoviesByFirstName(@PathVariable String name){
         return movieService.getMoviesByTitle(name);
     }
 
-    @PutMapping("/movies/updatemovie")
+    @Operation(summary = "update movie information in database")
+    @PutMapping("/movies")
     public Movie updateMovie(@RequestBody Movie movie){
         return movieService.updateMovie(movie);
     }
 
-    @DeleteMapping("/movies/delete/byid/{id}")
+    @Operation(summary = "delete movie from database by id")
+    @DeleteMapping("/movies/{id}")
     public String deleteMovie(@PathVariable Long id){
         return movieService.deleteMovie(id);
     }
 
-
-    @PutMapping("/movies/byid/{movieid}/actors/delete/byid/{actorid}")
+    @Operation(summary = "add actor to movie")
+    @PutMapping("/movies/{movieid}/actors/{actorid}")
     public Actor addActor(@PathVariable Long movieid, @PathVariable Long actorid) {
         return actorService.attachActorToMovie(movieid, actorid);
     }
 
-    @DeleteMapping("/movies/byid/{movieid}/actors/delete/byid/{actorid}")
+    @Operation(summary = "remove actor from movie")
+    @DeleteMapping("/movies/{movieid}/actors/{actorid}")
     public void removeActor(@PathVariable Long movieid, @PathVariable Long actorid) {
         actorService.removeActor(movieid, actorid);
     }
 
-    @GetMapping("/movies/get/rating/{movieid}")
-    public Rating getRating(@PathVariable Long movieid){
-        return movieService.getCalculatedRating(movieid);
+    @Operation(summary = "get movie rating")
+    @GetMapping("/movies/{id}/ratings")
+    public Rating getRating(@PathVariable Long id){
+        return movieService.getCalculatedRating(id);
     }
 
-    @PutMapping("/movies/{movieid}/rating")
-    public Movie addRating(@PathVariable Long movieid, @RequestBody Rating rating){
-        return ratingService.addRating(movieid, rating);
+    @Operation(summary = "add rating to the movie")
+    @PutMapping("/movies/{id}/ratings")
+    public Movie addRating(@PathVariable Long id, @RequestBody Rating rating){
+        return ratingService.addRating(id, rating);
     }
 
-    @GetMapping("/movies/get/comments/{movieid}")
-    public List<Comment> getMovieComments(@PathVariable Long movieid){
-        Movie movie = movieService.getMovieById(movieid);
+    @Operation(summary = "get all comments from the movie")
+    @GetMapping("/movies/{id}/comments")
+    public List<Comment> getMovieComments(@PathVariable Long id){
+        Movie movie = movieService.getMovieById(id);
         return movie.getComments();
     }
-
-
 
 }
