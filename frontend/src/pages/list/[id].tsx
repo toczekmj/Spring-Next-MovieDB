@@ -66,7 +66,7 @@ export default function SingleMoviePage() {
     const router = useRouter();
     const { id } = router.query;
 
-    const APIURL = `http://api.projektimdb.it/api/v1/movies/get/byid/${
+    const APIURL = `https://www.projektimdb.it/api/v1/movies/${
         id as string
     }`;
     const { data, error } = useSWR<MovieData>(APIURL, fetcher);
