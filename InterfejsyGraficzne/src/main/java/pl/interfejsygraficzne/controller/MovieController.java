@@ -15,6 +15,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1")
+@CrossOrigin
 public class MovieController {
 
     private final MovieService movieService;
@@ -45,7 +46,7 @@ public class MovieController {
     }
 
     @Operation(summary = "get list of movies containing a phrase in title")
-    @GetMapping("/movies/{name}")
+    @GetMapping("/movies/title/{name}")
     public List<Movie> findMoviesByFirstName(@PathVariable String name){
         return movieService.getMoviesByTitle(name);
     }
