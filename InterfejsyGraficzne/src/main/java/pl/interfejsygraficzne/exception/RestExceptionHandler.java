@@ -1,5 +1,7 @@
 package pl.interfejsygraficzne.exception;
 
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +29,17 @@ public class RestExceptionHandler {
         ex.getBindingResult().getFieldErrors().forEach(error -> errors.add(new ApiException(HttpStatus.BAD_REQUEST.value(), Strings.concat(error.getField() + ": ", error.getDefaultMessage()))));
 
         return ResponseEntity.badRequest().body(errors);
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<Object> handleConstraintViolationException(ConstraintViolationException e) {
+        String firstErrorMessage = e.getConstraintViolations().stream()
+                .map(ConstraintViolation::getMessage)
+                .findFirst()
+                .orElse("Validation error occurred");
+        ApiException apiException = new ApiException(HttpStatus.BAD_REQUEST.value(), firstErrorMessage);
+        return ResponseEntity.badRequest().body(apiException);
     }
 
 }

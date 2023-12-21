@@ -19,7 +19,7 @@ public class MovieList {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long movieListId;
 
-    @NotNull
+    @NotNull(message = "Nie podano nazwy listy!")
     private String listName;
 
     @Valid
@@ -31,7 +31,6 @@ public class MovieList {
     )
     private List<Movie> movies;
 
-    @Transient
     private String movieListURL;
 
     // TODO implementation of users, security, so each user can have their own lists.
