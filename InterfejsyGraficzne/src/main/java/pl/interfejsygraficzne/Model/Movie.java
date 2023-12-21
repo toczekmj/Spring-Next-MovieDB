@@ -25,6 +25,9 @@ public class Movie {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "rating_id", referencedColumnName = "ratingId")
     private Rating rating;
+
+    @NotNull
+    private String description;
     @ManyToMany(mappedBy = "movies", cascade = CascadeType.REMOVE)
     private List<Actor> actors;
 
