@@ -1,13 +1,12 @@
 package pl.interfejsygraficzne.Model;
 
 import jakarta.validation.constraints.NotNull;
-import lombok.Data;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
-import java.util.Set;
 
 
 @RequiredArgsConstructor
@@ -15,9 +14,10 @@ import java.util.Set;
 @Setter
 public class MovieListRequest {
 
-    @NotNull
+    @NotNull(message = "Proszę wybrać nazwę dla listy.")
     private String listName;
     @NotNull
+    @Size(min = 1, message = "Proszę wybrać przynajmniej jeden film.")
     private List<Long> movieIds;
 
 }

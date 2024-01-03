@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.util.List;
@@ -18,8 +19,8 @@ public class MovieList {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long movieListId;
-
-    @NotNull(message = "Nie podano nazwy listy!")
+    @Size(min = 3, max = 20, message = "Nie podano nazwy listy!")
+    @NotNull
     private String listName;
 
     @Valid
@@ -31,14 +32,9 @@ public class MovieList {
     )
     private List<Movie> movies;
 
-    private String movieListURL;
+    private String movieListURL = "https://imgur.com/i9PqYju.png";
 
-    // TODO implementation of users, security, so each user can have their own lists.
 
-    @PrePersist
-    public void generateListUrl() {
-        // generating url when adding new MovieList, url might be changed.
-        this.movieListURL = "/lists/" + this.movieListId + "-" + this.listName.toLowerCase().replace(" ", "-");
-    }
+
 
 }

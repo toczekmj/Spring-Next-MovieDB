@@ -4,6 +4,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.validation.constraints.Max;
 import lombok.Data;
 
 @Entity
@@ -13,6 +14,7 @@ public class Rating {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long ratingId;
+
     private Long movieId;
     private Integer plot = 0;
     private Integer acting = 0;

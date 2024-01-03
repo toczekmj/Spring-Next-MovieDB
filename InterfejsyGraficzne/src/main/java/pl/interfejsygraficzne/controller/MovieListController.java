@@ -42,7 +42,6 @@ public class MovieListController {
     public String deleteMovieList(@PathVariable Long id) {
         return movieListService.deleteMovieList(id);
     }
-    // TODO When user is added (spring security) - getallmovielists should return only lists created by the user.
     @Operation(summary = "get movie lists")
     @GetMapping("/lists")
     public List<MovieList> getAllMovieLists() {
