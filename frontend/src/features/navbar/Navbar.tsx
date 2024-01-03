@@ -25,6 +25,7 @@ import {
 } from "@chakra-ui/react";
 
 import { LoginModal, SignInModal } from "./LoginModals";
+import { SearchModal } from "./SearchModal";
 
 export const WithSubnavigation = () => {
   const { isOpen, onToggle } = useDisclosure();
@@ -33,6 +34,12 @@ export const WithSubnavigation = () => {
     isOpen: isOpenLoginModal,
     onOpen: onOpenLoginModal,
     onClose: onCloseLoginModal,
+  } = useDisclosure();
+
+  const {
+    isOpen: isOpenSearchModal,
+    onOpen: onOpenSearchModal,
+    onClose: onCloseSearchModal,
   } = useDisclosure();
 
   const {
@@ -77,18 +84,20 @@ export const WithSubnavigation = () => {
           </Flex>
         </Flex>
 
-        <InputGroup maxW="500px">
-          <InputLeftElement pointerEvents="none">
-            <Search2Icon color="#deb522" />
-          </InputLeftElement>
-          <Input
-            type="tel"
-            placeholder="Wyszukaj filmy lub aktorów"
-            bg="white"
-            border="none"
-          />
-        </InputGroup>
-
+        <Flex bg="white" borderRadius="4px" flexGrow="0.3">
+          <Button
+            w="100%"
+            alignContent="flex-start"
+            justifyContent="flex-start"
+            onClick={onOpenSearchModal}
+          >
+            <Search2Icon color="#deb522" mr="10px" />
+            <Text bg="white" fontWeight={500}>
+              Wyszukaj filmy
+            </Text>
+          </Button>
+        </Flex>
+        <SearchModal onClose={onCloseSearchModal} isOpen={isOpenSearchModal} />
         <Stack
           flex={{ base: 1, md: 0 }}
           justify={"flex-end"}

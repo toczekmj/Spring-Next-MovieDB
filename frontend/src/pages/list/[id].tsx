@@ -42,6 +42,9 @@ export default function SingleMoviePage() {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const APIURL = `https://www.projektimdb.it/api/v1/movies/${id as string}`;
+  const POSTURL = `https://www.projektimdb.it/api/v1/movies/${
+    id as string
+  }/comments`;
   const { data, error, mutate } = useSWR<MovieData>(APIURL, fetcher);
   if (error) return <div>Failed to fetch</div>;
   if (!data) {
@@ -129,7 +132,7 @@ export default function SingleMoviePage() {
         isOpen={isOpen}
         onClose={onClose}
         data={data}
-        apiurl={APIURL}
+        apiurl={POSTURL}
       />
     </Stack>
   );
@@ -149,6 +152,7 @@ const CommentModal = ({
   const [input, setInput] = useState("");
   const toast = useToast();
   //i know, it can be done way better, but there's no use to that
+
   const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setInput(e.target.value);
   };
@@ -156,10 +160,11 @@ const CommentModal = ({
 
   const sendRequest = async (
     url: string,
-    { arg }: { arg: { id: number; text: string } }
+    { arg }: { arg: { text: string } }
   ) => {
     return fetch(url, {
-      method: "POST",
+      method: "PUT",
+      headers: { "Content-Type": "application/json; charset=UTF-8" },
       body: JSON.stringify(arg),
     }).then((res) => res.json());
   };
@@ -197,13 +202,13 @@ const CommentModal = ({
                     const comments = data.comments;
 
                     //do zmiany potem to id na nasze
-                    comments.push({ id: 99, text: input });
+                    // comments.push({ id: 99, text: input });
 
-                    const comment = { id: 99, text: input };
+                    // const comment = { id: 99, text: input };
                     try {
                       console.log({ ...data, comments: comments });
 
-                      const result = await trigger({ id: 99, text: input });
+                      const result = await trigger({ text: input });
 
                       onClose();
                       toast({

@@ -28,7 +28,6 @@ const Home = () => {
     );
   }
 
-  // console.log(data[0].rating.acting);
   const sortedMoviesPopularity = data.sort((a, b) => {
     if (a.rating === null) return 1;
     if (b.rating === null) return -1;
