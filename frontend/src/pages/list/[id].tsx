@@ -45,7 +45,9 @@ export default function SingleMoviePage() {
   const POSTURL = `https://www.projektimdb.it/api/v1/movies/${
     id as string
   }/comments`;
-  const { data, error, mutate } = useSWR<MovieData>(APIURL, fetcher);
+  const { data, error } = useSWR<MovieData>(APIURL, fetcher, {
+    refreshInterval: 1000,
+  });
   if (error) return <div>Failed to fetch</div>;
   if (!data) {
     return (
@@ -199,18 +201,14 @@ const CommentModal = ({
                     color: "#342a08",
                   }}
                   onClick={async () => {
-                    const comments = data.comments;
-
-                    //do zmiany potem to id na nasze
-                    // comments.push({ id: 99, text: input });
-
-                    // const comment = { id: 99, text: input };
                     try {
-                      console.log({ ...data, comments: comments });
-
-                      const result = await trigger({ text: input });
+                      const result = await trigger(
+                        { text: input },
+                        { revalidate: true }
+                      );
 
                       onClose();
+                      setInput("");
                       toast({
                         title: "Dodano komentarz.",
                         description: "Pomyślnie dodano komentarz",
