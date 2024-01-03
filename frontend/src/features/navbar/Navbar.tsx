@@ -98,9 +98,9 @@ export const WithSubnavigation = () => {
           <Button
             as={"a"}
             fontSize={"sm"}
-            fontWeight={400}
+            fontWeight={700}
+            color="#342a08"
             variant={"link"}
-            // href={"#"}
             onClick={onOpenLoginModal}
           >
             Zaloguj się
@@ -139,14 +139,13 @@ export const WithSubnavigation = () => {
 };
 
 const DesktopNav = () => {
-  const linkColor = useColorModeValue("gray.600", "gray.200");
   const linkHoverColor = useColorModeValue("gray.800", "white");
   const popoverContentBgColor = useColorModeValue("white", "gray.800");
 
   return (
     <Stack direction={"row"} spacing={4}>
       {NAV_ITEMS.map((navItem) => (
-        <Box key={navItem.label} _hover={{ textDecoration: "underline" }}>
+        <Box key={navItem.label}>
           <Popover trigger={"hover"} placement={"bottom-start"}>
             <PopoverTrigger>
               <Box
@@ -154,10 +153,10 @@ const DesktopNav = () => {
                 p={2}
                 href={navItem.href ?? "#"}
                 fontSize={"sm"}
-                fontWeight={500}
-                color={linkColor}
+                fontWeight={700}
+                color={"#342a08"}
                 _hover={{
-                  textDecoration: "none",
+                  textDecoration: "underline",
                   color: linkHoverColor,
                 }}
               >
@@ -332,7 +331,7 @@ const NAV_ITEMS: Array<NavItem> = [
       {
         label: "Listy moich znajomych",
         subLabel: "Przeglądaj listy swoich znajomych i je oceniaj!",
-        href: "#",
+        href: "404",
       },
     ],
   },

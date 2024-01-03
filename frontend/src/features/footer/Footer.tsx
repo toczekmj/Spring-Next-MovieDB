@@ -28,6 +28,7 @@ const SocialButton = ({
       cursor={"pointer"}
       as={"a"}
       href={href}
+      target="_blank"
       display={"inline-flex"}
       color="black"
       alignItems={"center"}
@@ -66,13 +67,19 @@ export default function Footer() {
           © 2077 IGWeb, Inc. All rights reserved
         </Text>
         <Stack direction={"row"} spacing={6}>
-          <SocialButton label={"Twitter"} href={"#"}>
+          <SocialButton
+            label={"Twitter"}
+            href={"https://twitter.com/BoniekZibi/status/1742213277889753419"}
+          >
             <FaTwitter />
           </SocialButton>
-          <SocialButton label={"YouTube"} href={"#"}>
+          <SocialButton
+            label={"YouTube"}
+            href={"https://www.youtube.com/watch?v=HKIW9yRzm04"}
+          >
             <FaYoutube />
           </SocialButton>
-          <SocialButton label={"Instagram"} href={"#"}>
+          <SocialButton label={"Instagram"} href={"https://www.instagram.com"}>
             <FaInstagram />
           </SocialButton>
         </Stack>
