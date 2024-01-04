@@ -6,6 +6,7 @@ import {
   Search2Icon,
 } from "@chakra-ui/icons";
 import {
+  Avatar,
   Box,
   Button,
   Collapse,
@@ -16,7 +17,11 @@ import {
   InputGroup,
   InputLeftElement,
   Popover,
+  PopoverArrow,
+  PopoverBody,
+  PopoverCloseButton,
   PopoverContent,
+  PopoverHeader,
   PopoverTrigger,
   Stack,
   Text,
@@ -26,9 +31,17 @@ import {
 
 import { LoginModal, SignInModal } from "./LoginModals";
 import { SearchModal } from "./SearchModal";
+import { useAtom, useAtomValue } from "jotai";
+import { loginAtom } from "./atoms/loginAtom";
 
 export const WithSubnavigation = () => {
   const { isOpen, onToggle } = useDisclosure();
+
+  const [loginValue, setLoginValue] = useAtom(loginAtom);
+
+  const toggleValue = () => {
+    setLoginValue((prevValue) => !prevValue);
+  };
 
   const {
     isOpen: isOpenLoginModal,
@@ -104,39 +117,82 @@ export const WithSubnavigation = () => {
           direction={"row"}
           spacing={6}
         >
-          <Button
-            as={"a"}
-            fontSize={"sm"}
-            fontWeight={700}
-            color="#342a08"
-            variant={"link"}
-            onClick={onOpenLoginModal}
-          >
-            Zaloguj się
-          </Button>
-          <LoginModal onClose={onCloseLoginModal} isOpen={isOpenLoginModal} />
-          <Button
-            as={"a"}
-            display={{ base: "none", md: "inline-flex" }}
-            fontSize={"sm"}
-            fontWeight={600}
-            color={"black"}
-            bg={"white"}
-            onClick={onOpenSignInModal}
-            _hover={{
-              bg: "gray",
-            }}
-          >
-            Zarejestruj się
-          </Button>
-          <SignInModal
-            onClose={onCloseSignInModal}
-            isOpen={isOpenSignInModal}
-            onClick={() => {
-              onOpenLoginModal();
-              onCloseSignInModal();
-            }}
-          />
+          {loginValue ? (
+            <Popover>
+              <PopoverTrigger>
+                <Avatar
+                  src="https://lukasz.langa.pl/a01d8a5d-3631-4c5b-8b68-a4750d4d0b84/assets/bateman.jpg"
+                  w="40px"
+                  h="40px"
+                  cursor="pointer"
+                />
+              </PopoverTrigger>
+              <PopoverContent
+                w="100px"
+                border={0}
+                _focus={{ boxShadow: "xl" }}
+                boxShadow="xl"
+              >
+                <PopoverArrow />
+                <PopoverBody
+                  display="flex"
+                  alignContent="center"
+                  justifyContent="center"
+                >
+                  <Button
+                    as={"a"}
+                    fontSize={"sm"}
+                    fontWeight={700}
+                    color="#342a08"
+                    variant={"link"}
+                    onClick={toggleValue}
+                    cursor="pointer"
+                  >
+                    Wyloguj
+                  </Button>
+                </PopoverBody>
+              </PopoverContent>
+            </Popover>
+          ) : (
+            <>
+              <Button
+                as={"a"}
+                fontSize={"sm"}
+                fontWeight={700}
+                color="#342a08"
+                variant={"link"}
+                onClick={onOpenLoginModal}
+              >
+                Zaloguj się
+              </Button>
+              <LoginModal
+                onClose={onCloseLoginModal}
+                isOpen={isOpenLoginModal}
+              />
+              <Button
+                as={"a"}
+                display={{ base: "none", md: "inline-flex" }}
+                fontSize={"sm"}
+                fontWeight={600}
+                color={"black"}
+                bg={"white"}
+                onClick={onOpenSignInModal}
+                _hover={{
+                  bg: "gray",
+                }}
+              >
+                Zarejestruj się
+              </Button>
+              <SignInModal
+                onClose={onCloseSignInModal}
+                isOpen={isOpenSignInModal}
+                onClick={() => {
+                  onOpenLoginModal();
+                  onCloseSignInModal();
+                }}
+              />
+            </>
+          )}
         </Stack>
       </Flex>
 
@@ -324,7 +380,7 @@ const NAV_ITEMS: Array<NavItem> = [
       {
         label: "Dodaj serial",
         subLabel: "Dostępne już wkrótce!",
-        href: "404",
+        href: "/404",
       },
     ],
     href: "/add_movie",
@@ -340,7 +396,7 @@ const NAV_ITEMS: Array<NavItem> = [
       {
         label: "Listy moich znajomych",
         subLabel: "Przeglądaj listy swoich znajomych i je oceniaj!",
-        href: "404",
+        href: "/404",
       },
     ],
   },

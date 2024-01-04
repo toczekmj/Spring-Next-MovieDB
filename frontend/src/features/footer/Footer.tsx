@@ -35,7 +35,7 @@ const SocialButton = ({
       justifyContent={"center"}
       transition={"background 0.3s ease"}
       _hover={{
-        bg: useColorModeValue("blackAlpha.200", "whiteAlpha.200"),
+        bg: "#ead17c",
       }}
     >
       <VisuallyHidden>{label}</VisuallyHidden>

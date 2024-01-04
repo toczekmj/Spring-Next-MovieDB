@@ -4,11 +4,7 @@ import {
   CardBody,
   CardHeader,
   Center,
-  Checkbox,
   FormControl,
-  FormLabel,
-  Input,
-  Link,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -19,12 +15,13 @@ import {
   Stack,
   Text,
   Textarea,
+  Tooltip,
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
 import ReactStars from "react-rating-stars-component";
-import React, { EventHandler, ReactEventHandler, useState } from "react";
-import useSWR, { KeyedMutator, useSWRConfig } from "swr";
+import React, { useState } from "react";
+import useSWR from "swr";
 import { useRouter } from "next/router";
 import useSWRMutation from "swr/mutation";
 import { MovieData } from "@/providers/interfaces/movieDataTypes";
@@ -34,13 +31,15 @@ import {
   fetchRating,
   fetcher,
 } from "@/providers/api/fetchers";
+import { useAtomValue } from "jotai";
+import { loginAtom } from "@/features/navbar/atoms/loginAtom";
 
 export default function SingleMoviePage() {
   const router = useRouter();
   const { id } = router.query;
 
   const { isOpen, onOpen, onClose } = useDisclosure();
-
+  const isLoggedIn = useAtomValue(loginAtom);
   const APIURL = `https://www.projektimdb.it/api/v1/movies/${id as string}`;
   const POSTURL = `https://www.projektimdb.it/api/v1/movies/${
     id as string
@@ -60,7 +59,8 @@ export default function SingleMoviePage() {
   }
   const actorsList = fetchActors(data.actors);
   const commentList = fetchComments(data.comments);
-  const rating = fetchRating(data.rating);
+
+  const rating = data.rating !== null ? fetchRating(data.rating) : [];
 
   return (
     <Stack align="center" justifyContent="center" spacing="50px" my="100px">
@@ -84,30 +84,36 @@ export default function SingleMoviePage() {
           <Text>
             <b>Opinie telewidzów:</b>
           </Text>
-          <Text>Aktorstwo:</Text>
-          <ReactStars
-            count={5}
-            value={rating[1]}
-            size={20}
-            isHalf={true}
-            edit={false}
-          ></ReactStars>
-          <Text>Fabuła:</Text>
-          <ReactStars
-            count={5}
-            value={rating[0]}
-            size={20}
-            isHalf={true}
-            edit={false}
-          ></ReactStars>
-          <Text>Scenografia:</Text>
-          <ReactStars
-            count={5}
-            value={rating[2]}
-            size={20}
-            isHalf={true}
-            edit={false}
-          ></ReactStars>
+          {rating.length === 0 ? (
+            <Text>Brak ocen dla podanego filmu</Text>
+          ) : (
+            <>
+              <Text>Aktorstwo:</Text>
+              <ReactStars
+                count={5}
+                value={rating[1]}
+                size={20}
+                isHalf={true}
+                edit={false}
+              ></ReactStars>
+              <Text>Fabuła:</Text>
+              <ReactStars
+                count={5}
+                value={rating[0]}
+                size={20}
+                isHalf={true}
+                edit={false}
+              ></ReactStars>
+              <Text>Scenografia:</Text>
+              <ReactStars
+                count={5}
+                value={rating[2]}
+                size={20}
+                isHalf={true}
+                edit={false}
+              ></ReactStars>
+            </>
+          )}
         </CardBody>
       </Card>
 
@@ -119,17 +125,34 @@ export default function SingleMoviePage() {
           </Text>
         </CardHeader>
         <CardBody>
-          <Text dangerouslySetInnerHTML={{ __html: commentList }}></Text>
+          {commentList.length === 0 ? (
+            <Text>Brak komentarzy dla podanego filmu</Text>
+          ) : (
+            <Text dangerouslySetInnerHTML={{ __html: commentList }}></Text>
+          )}
         </CardBody>
       </Card>
-      <Button
-        _hover={{ bg: "white", color: "#342a08" }}
-        bg="#deb522"
-        color="white"
-        onClick={onOpen}
+
+      <Tooltip
+        color="black"
+        hasArrow={true}
+        label="Musisz być zalogowany aby dodać komentarz!"
+        isDisabled={isLoggedIn}
       >
-        Dodaj komentarz
-      </Button>
+        <Button
+          bg="#deb522"
+          color="white"
+          onClick={onOpen}
+          isDisabled={!isLoggedIn}
+          _hover={{
+            bg: "white",
+            color: "#342a08",
+            _disabled: { bg: "#deb522", color: "white" },
+          }}
+        >
+          Dodaj komentarz
+        </Button>
+      </Tooltip>
       <CommentModal
         isOpen={isOpen}
         onClose={onClose}
@@ -153,7 +176,7 @@ const CommentModal = ({
 }) => {
   const [input, setInput] = useState("");
   const toast = useToast();
-  //i know, it can be done way better, but there's no use to that
+  //i know, it can be done way better, but there's no use to that (via useDebounce)
 
   const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setInput(e.target.value);
@@ -170,7 +193,7 @@ const CommentModal = ({
       body: JSON.stringify(arg),
     }).then((res) => res.json());
   };
-  const { trigger, isMutating } = useSWRMutation(apiurl, sendRequest);
+  const { trigger } = useSWRMutation(apiurl, sendRequest);
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} isCentered={true} size="sm">
