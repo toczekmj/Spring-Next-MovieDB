@@ -2,7 +2,6 @@ package pl.interfejsygraficzne.Model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.Data;
 import org.hibernate.validator.constraints.Range;
 
@@ -20,7 +19,12 @@ public class Movie {
     @NotNull
     private String director;
     @NotNull
-    @Range(min = 1800, max = 2024)
+    @Column(columnDefinition = "LONGTEXT")
+    private String description;
+    @NotNull
+    private String Genre;
+    @NotNull
+    @Range(min = 1800, max = 2050)
     private Integer productionYear;
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "rating_id", referencedColumnName = "ratingId")
