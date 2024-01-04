@@ -1,27 +1,16 @@
 import { fetcher } from "@/providers/api/fetchers";
 import { MovieData } from "@/providers/interfaces/movieDataTypes";
-import { Search2Icon, ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
+import { Search2Icon } from "@chakra-ui/icons";
 import {
-  Box,
-  Button,
   Card,
   Center,
-  Checkbox,
   Divider,
-  FormControl,
-  FormLabel,
-  HStack,
-  Icon,
+  Flex,
   Input,
   InputGroup,
   InputLeftElement,
-  InputRightElement,
-  Link,
   Modal,
-  ModalBody,
-  ModalCloseButton,
   ModalContent,
-  ModalHeader,
   ModalOverlay,
   Spinner,
   Stack,
@@ -46,9 +35,31 @@ export const SearchModal = ({
   const { data, error, isLoading } = useSWR<MovieData[]>(APIURL, fetcher);
 
   const filteredMovies = data
-    ? data.filter((movie) =>
-        movie.title.toLowerCase().includes(input.toLowerCase())
-      )
+    ? data.filter((movie) => {
+        const lowerCaseInput = input.toLowerCase();
+        const hasMatchingTitle = movie.title
+          .toLowerCase()
+          .includes(lowerCaseInput);
+        const hasMatchingActor = movie.actors.some(
+          (actor) =>
+            actor.firstName.toLowerCase().includes(lowerCaseInput) ||
+            actor.lastName.toLowerCase().includes(lowerCaseInput)
+        );
+        const hasMatchingDirector = movie.director
+          .toLowerCase()
+          .includes(lowerCaseInput);
+
+        const productionYear = String(movie.productionYear);
+
+        const hasMatchingDate = productionYear.includes(lowerCaseInput);
+
+        return (
+          hasMatchingTitle ||
+          hasMatchingActor ||
+          hasMatchingDirector ||
+          hasMatchingDate
+        );
+      })
     : [];
 
   return (
@@ -57,7 +68,7 @@ export const SearchModal = ({
       <ModalContent>
         <>
           {isLoading || !data || error ? (
-            <Stack h="80vh" justify="center">
+            <Stack justify="center" h="68px">
               <Center>
                 <Spinner />
               </Center>
@@ -96,10 +107,29 @@ export const SearchModal = ({
                         href={`/list/${movie.movieId}`}
                         w="90%"
                         bg="#f7f2ed"
-                        minH="64px"
-                        justify="center"
+                        pl="16px"
+                        py="8px"
                       >
-                        <Text pl="16px">{movie.title}</Text>
+                        <Flex>
+                          <Stack spacing={0} fontSize="12px">
+                            <Text fontSize="18px" fontWeight={700}>
+                              {movie.title}
+                            </Text>
+                            <Text>
+                              Data produkcji: {movie.productionYear}, Reżyser:{" "}
+                              {movie.director}
+                            </Text>
+                            <Text>
+                              Aktorzy:{" "}
+                              {movie.actors.slice(0, 3).map((actor, index) => (
+                                <span key={index}>
+                                  {actor.firstName} {actor.lastName}
+                                  {index < 2 ? ", " : "..."}
+                                </span>
+                              ))}
+                            </Text>
+                          </Stack>
+                        </Flex>
                       </Card>
                     ))}
                   </Stack>
