@@ -1,9 +1,11 @@
 import {
+  Box,
   Button,
   Card,
   CardBody,
   CardHeader,
   Center,
+  Flex,
   FormControl,
   Modal,
   ModalBody,
@@ -11,6 +13,13 @@ import {
   ModalContent,
   ModalHeader,
   ModalOverlay,
+  Popover,
+  PopoverArrow,
+  PopoverBody,
+  PopoverCloseButton,
+  PopoverContent,
+  PopoverHeader,
+  PopoverTrigger,
   Spinner,
   Stack,
   Text,
@@ -24,7 +33,7 @@ import React, { useState } from "react";
 import useSWR from "swr";
 import { useRouter } from "next/router";
 import useSWRMutation from "swr/mutation";
-import { MovieData } from "@/providers/interfaces/movieDataTypes";
+import { MovieData, Rating } from "@/providers/interfaces/movieDataTypes";
 import {
   fetchActors,
   fetchComments,
@@ -35,16 +44,22 @@ import { useAtomValue } from "jotai";
 import { loginAtom } from "@/features/navbar/atoms/loginAtom";
 import { bannedWords } from "@/providers/swearWords/bannedWords";
 
+type RatingWithoutVotesCount = Omit<Rating, "votesCount">;
+
 export default function SingleMoviePage() {
   const router = useRouter();
   const { id } = router.query;
-
   const { isOpen, onOpen, onClose } = useDisclosure();
   const isLoggedIn = useAtomValue(loginAtom);
+
   const APIURL = `https://www.projektimdb.it/api/v1/movies/${id as string}`;
   const POSTURL = `https://www.projektimdb.it/api/v1/movies/${
     id as string
   }/comments`;
+  const ratingURL = `https://www.projektimdb.it/api/v1/movies/${
+    id as string
+  }/ratings`;
+
   const { data, error } = useSWR<MovieData>(APIURL, fetcher, {
     refreshInterval: 1000,
   });
@@ -116,6 +131,7 @@ export default function SingleMoviePage() {
                 isHalf={true}
                 edit={false}
               ></ReactStars>
+              <AddRatingPopover isLoggedIn={isLoggedIn} apiLink={ratingURL} />
             </>
           )}
         </CardBody>
@@ -157,26 +173,178 @@ export default function SingleMoviePage() {
           Dodaj komentarz
         </Button>
       </Tooltip>
-      <CommentModal
-        isOpen={isOpen}
-        onClose={onClose}
-        data={data}
-        apiurl={POSTURL}
-      />
+      <CommentModal isOpen={isOpen} onClose={onClose} apiurl={POSTURL} />
     </Stack>
   );
 }
 
+const AddRatingPopover = ({
+  isLoggedIn,
+  apiLink,
+}: {
+  isLoggedIn: boolean;
+  apiLink: string;
+}) => {
+  const [ratings, setRatings] = useState<RatingWithoutVotesCount>({
+    plot: "0",
+    acting: "0",
+    scenography: "0",
+  });
+
+  const handleRatingChange = (
+    name: keyof RatingWithoutVotesCount,
+    value: number
+  ) => {
+    setRatings((prevRatings) => ({
+      ...prevRatings,
+      [name]: value.toString(),
+    }));
+  };
+
+  const sendRequest = async (
+    url: string,
+    { arg }: { arg: { plot: number; acting: number; scenography: number } }
+  ) => {
+    return fetch(url, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json; charset=UTF-8" },
+      body: JSON.stringify(arg),
+    }).then((res) => res.json());
+  };
+  const { trigger } = useSWRMutation(apiLink, sendRequest);
+  const toast = useToast();
+
+  return (
+    <Popover placement="top-end">
+      {({ onClose }) => (
+        <>
+          <PopoverTrigger>
+            <Button variant="link" fontSize="14px" mt="10px">
+              Dodaj opinię
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent border={0} boxShadow="xl" maxW="200px">
+            <PopoverArrow />
+            <PopoverCloseButton />
+            <PopoverHeader border={0} fontWeight={700}>
+              Podziel się opinią!
+            </PopoverHeader>
+            <PopoverBody
+              justifyContent="center"
+              textAlign="center"
+              alignContent="center"
+            >
+              <Text>Aktorstwo:</Text>
+              <Center>
+                <ReactStars
+                  count={5}
+                  value={parseInt(ratings.acting)}
+                  size={20}
+                  isHalf={true}
+                  edit={true}
+                  onChange={(value: number) =>
+                    handleRatingChange("acting", value)
+                  }
+                />
+              </Center>
+              <Text>Fabuła:</Text>
+              <Center>
+                <ReactStars
+                  count={5}
+                  value={parseInt(ratings.plot)}
+                  size={20}
+                  isHalf={true}
+                  edit={true}
+                  onChange={(value: number) =>
+                    handleRatingChange("plot", value)
+                  }
+                />
+              </Center>
+              <Text>Scenografia:</Text>
+              <Center>
+                <ReactStars
+                  count={5}
+                  value={parseInt(ratings.scenography)}
+                  size={20}
+                  isHalf={true}
+                  edit={true}
+                  onChange={(value: number) =>
+                    handleRatingChange("scenography", value)
+                  }
+                />
+              </Center>
+              <Tooltip
+                color="black"
+                hasArrow={true}
+                label="Musisz być zalogowany aby dodać opinię!"
+                isDisabled={isLoggedIn}
+              >
+                <Button
+                  bg="#deb522"
+                  color="white"
+                  isDisabled={!isLoggedIn}
+                  _hover={{
+                    bg: "white",
+                    color: "#342a08",
+                    _disabled: { bg: "#deb522", color: "white" },
+                  }}
+                  my="10px"
+                  size="sm"
+                  // ref={initRef}
+                  onClick={async () => {
+                    try {
+                      const result = await trigger(
+                        {
+                          plot: parseInt(ratings.plot),
+                          scenography: parseInt(ratings.scenography),
+                          acting: parseInt(ratings.acting),
+                        },
+                        { revalidate: true }
+                      );
+
+                      onClose();
+
+                      toast({
+                        title: "Dodano komentarz.",
+                        description: "Pomyślnie dodano opinię",
+                        status: "success",
+                        duration: 2000,
+                        isClosable: true,
+                      });
+                    } catch (e) {
+                      toast({
+                        title: "Błąd.",
+                        description: "Nie udało się dodać opinii.",
+                        status: "error",
+                        duration: 2000,
+                        isClosable: true,
+                      });
+                    }
+                    //becuase the Stars are not updating
+                    //they're broken
+                    //i will never ever do that again
+                    window.location.reload();
+                  }}
+                >
+                  Dodaj opinię
+                </Button>
+              </Tooltip>
+            </PopoverBody>
+          </PopoverContent>
+        </>
+      )}
+    </Popover>
+  );
+};
+
 const CommentModal = ({
   isOpen,
   onClose,
-  data,
   apiurl,
 }: {
   isOpen: boolean;
   onClose: () => void;
   apiurl: string;
-  data: MovieData;
 }) => {
   const [input, setInput] = useState("");
   const toast = useToast();
