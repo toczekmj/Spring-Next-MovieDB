@@ -33,6 +33,7 @@ import {
 } from "@/providers/api/fetchers";
 import { useAtomValue } from "jotai";
 import { loginAtom } from "@/features/navbar/atoms/loginAtom";
+import { bannedWords } from "@/providers/swearWords/bannedWords";
 
 export default function SingleMoviePage() {
   const router = useRouter();
@@ -225,6 +226,29 @@ const CommentModal = ({
                   }}
                   onClick={async () => {
                     try {
+                      if (input === "") {
+                        toast({
+                          title: "Błąd.",
+                          description: "Komentarz nie może być pusty.",
+                          status: "error",
+                          duration: 2000,
+                          isClosable: true,
+                        });
+                        return;
+                      }
+
+                      if (bannedWords.some((word) => input.includes(word))) {
+                        toast({
+                          title: "Błąd.",
+                          description:
+                            "Komentarz nie może zawierać wulgarnych słów.",
+                          status: "error",
+                          duration: 2000,
+                          isClosable: true,
+                        });
+                        return;
+                      }
+
                       const result = await trigger(
                         { text: input },
                         { revalidate: true }
