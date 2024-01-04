@@ -31,6 +31,10 @@ public class MovieService {
         return repository.findById(id).orElseThrow(MovieNotFoundException::new);
     }
 
+    public List<Movie> getMoviesById(List<Long> id) {
+        return repository.findAllById(id);
+    }
+
     public List<Movie> getMoviesByTitle(String name){
         return repository.findByTitle(name);
     }

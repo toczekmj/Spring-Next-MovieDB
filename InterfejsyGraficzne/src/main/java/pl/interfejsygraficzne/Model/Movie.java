@@ -1,6 +1,7 @@
 package pl.interfejsygraficzne.Model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import org.hibernate.validator.constraints.Range;
@@ -14,21 +15,26 @@ public class Movie {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long movieId;
-    @NotNull(message = "Pole nie może zostać puste.")
+    @NotNull(message = "Pole tytułu filmu nie może pozostać puste.")
+    @Max(value = 40, message = "Tytuł filmu zbyt długi.")
     private String title;
-    @NotNull
+    @NotNull(message = "Pole reżysera nie może pozostać puste.")
     private String director;
     @NotNull
     @Column(columnDefinition = "LONGTEXT")
     private String description;
     @NotNull
     private String Genre;
+  
     @NotNull
-    @Range(min = 1800, max = 2050)
+    @Range(min = 1800, max = 2024, message = "Rok musi być wartością między 1800 a 2024 rokiem")
     private Integer productionYear;
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "rating_id", referencedColumnName = "ratingId")
     private Rating rating;
+
+    @NotNull(message = "Pole opisu filmu nie może pozostać puste")
+    private String description;
     @ManyToMany(mappedBy = "movies", cascade = CascadeType.REMOVE)
     private List<Actor> actors;
 

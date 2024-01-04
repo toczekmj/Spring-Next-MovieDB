@@ -3,6 +3,7 @@ package pl.interfejsygraficzne.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import pl.interfejsygraficzne.Model.Comment;
 import pl.interfejsygraficzne.Service.CommentService;
@@ -22,6 +23,7 @@ public class CommentController {
 
     @Operation(summary = "add new comment to the movie")
     @PutMapping("/movies/{id}/comments")
+    @ResponseStatus(HttpStatus.CREATED)
     public Comment addComment(@Valid @RequestBody Comment comment, @PathVariable Long id) {
         return commentService.saveComment(comment, id);
     }

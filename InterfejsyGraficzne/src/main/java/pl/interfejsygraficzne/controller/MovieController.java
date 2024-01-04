@@ -2,6 +2,7 @@ package pl.interfejsygraficzne.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import pl.interfejsygraficzne.Model.Actor;
 import pl.interfejsygraficzne.Model.Comment;
@@ -27,8 +28,9 @@ public class MovieController {
         this.ratingService = ratingService;
     }
 
-    @Operation(summary = "add move to the database")
+    @Operation(summary = "add movie to the database")
     @PostMapping("/movies")
+    @ResponseStatus(HttpStatus.CREATED)
     public Movie addMovie(@Valid @RequestBody Movie user){
         return movieService.saveMovie(user);
     }
@@ -53,7 +55,7 @@ public class MovieController {
 
     @Operation(summary = "update movie information in database")
     @PutMapping("/movies")
-    public Movie updateMovie(@RequestBody Movie movie){
+    public Movie updateMovie(@Valid @RequestBody Movie movie){
         return movieService.updateMovie(movie);
     }
 
@@ -83,7 +85,7 @@ public class MovieController {
 
     @Operation(summary = "add rating to the movie")
     @PutMapping("/movies/{id}/ratings")
-    public Movie addRating(@PathVariable Long id, @RequestBody Rating rating){
+    public Movie addRating(@PathVariable Long id, @Valid @RequestBody Rating rating){
         return ratingService.addRating(id, rating);
     }
 
