@@ -20,8 +20,9 @@ public class Movie {
     private String title;
     @NotNull(message = "Pole reżysera nie może pozostać puste.")
     private String director;
-    @NotNull
+
     @Column(columnDefinition = "LONGTEXT")
+    @NotNull(message = "Pole opisu filmu nie może pozostać puste")
     private String description;
     @NotNull
     private String Genre;
@@ -33,8 +34,6 @@ public class Movie {
     @JoinColumn(name = "rating_id", referencedColumnName = "ratingId")
     private Rating rating;
 
-    @NotNull(message = "Pole opisu filmu nie może pozostać puste")
-    private String description;
     @ManyToMany(mappedBy = "movies", cascade = CascadeType.REMOVE)
     private List<Actor> actors;
 
