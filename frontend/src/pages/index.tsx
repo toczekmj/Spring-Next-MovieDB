@@ -44,7 +44,6 @@ const Home = () => {
     return sumB - sumA;
   });
 
-  // console.log(sortedMoviesPopularity, "sorted");
   const topThreeMovies = sortedMoviesPopularity.slice(0, 3);
 
   const sortedMoviesDates = data.sort(

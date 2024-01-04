@@ -1,7 +1,13 @@
 import { fetcher } from "@/providers/api/fetchers";
 import { MovieData } from "@/providers/interfaces/movieDataTypes";
-import { Search2Icon } from "@chakra-ui/icons";
 import {
+  ArrowDownIcon,
+  ArrowUpDownIcon,
+  ArrowUpIcon,
+  Search2Icon,
+} from "@chakra-ui/icons";
+import {
+  Button,
   Card,
   Center,
   Divider,
@@ -26,6 +32,17 @@ export const SearchModal = ({
   isOpen: boolean;
   onClose: () => void;
 }) => {
+  const [sortOrder, setSortOrder] = useState("asc");
+  const [sortCriteria, setSortCriteria] = useState("");
+
+  const handleSortClick = (criteria: string) => {
+    if (criteria === sortCriteria) {
+      setSortOrder((prevOrder) => (prevOrder === "asc" ? "desc" : "asc"));
+    } else {
+      setSortCriteria(criteria);
+      setSortOrder("asc");
+    }
+  };
   const [input, setInput] = useState("");
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -52,16 +69,31 @@ export const SearchModal = ({
         const productionYear = String(movie.productionYear);
 
         const hasMatchingDate = productionYear.includes(lowerCaseInput);
-
+        const hasMatchingGenre = movie.genre
+          .toLowerCase()
+          .includes(lowerCaseInput);
         return (
           hasMatchingTitle ||
           hasMatchingActor ||
           hasMatchingDirector ||
-          hasMatchingDate
+          hasMatchingDate ||
+          hasMatchingGenre
         );
       })
     : [];
 
+  const sortedMovies = filteredMovies.slice().sort((a, b) => {
+    if (sortCriteria === "alphabetical") {
+      return sortOrder === "asc"
+        ? a.title.localeCompare(b.title)
+        : b.title.localeCompare(a.title);
+    } else if (sortCriteria === "productionDate") {
+      return sortOrder === "asc"
+        ? Number(a.productionYear) - Number(b.productionYear)
+        : Number(b.productionYear) - Number(a.productionYear);
+    }
+    return 0;
+  });
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="xl">
       <ModalOverlay />
@@ -95,11 +127,53 @@ export const SearchModal = ({
                   value={input}
                 />
               </InputGroup>
-              {filteredMovies.length === 0 || input === "" ? null : (
+              {sortedMovies.length === 0 || input === "" ? null : (
                 <>
+                  <Divider w="90%" alignSelf="center" />
+                  <Flex px="32px" fontSize="14px" justify="space-between">
+                    <Text>Sortuj: </Text>
+                    <Button
+                      variant="link"
+                      fontWeight={500}
+                      fontSize="14px"
+                      onClick={() => handleSortClick("alphabetical")}
+                      rightIcon={
+                        sortCriteria === "alphabetical" ? (
+                          sortOrder === "asc" ? (
+                            <ArrowUpIcon w={3} h={3} />
+                          ) : (
+                            <ArrowDownIcon w={3} h={3} />
+                          )
+                        ) : (
+                          <ArrowUpDownIcon w={3} h={3} />
+                        )
+                      }
+                    >
+                      alfabetycznie
+                    </Button>
+                    <Button
+                      variant="link"
+                      fontWeight={500}
+                      fontSize="14px"
+                      onClick={() => handleSortClick("productionDate")}
+                      rightIcon={
+                        sortCriteria === "productionDate" ? (
+                          sortOrder === "asc" ? (
+                            <ArrowUpIcon w={3} h={3} />
+                          ) : (
+                            <ArrowDownIcon w={3} h={3} />
+                          )
+                        ) : (
+                          <ArrowUpDownIcon w={3} h={3} />
+                        )
+                      }
+                    >
+                      według roku produkcji
+                    </Button>
+                  </Flex>
                   <Divider w="90%" alignSelf="center" mb="24px" />
                   <Stack maxH="500px" align="center" pb="24px" overflowY="auto">
-                    {filteredMovies.map((movie) => (
+                    {sortedMovies.map((movie) => (
                       <Card
                         _hover={{ bg: "#342a08", color: "white" }}
                         key={movie.movieId}
@@ -110,7 +184,7 @@ export const SearchModal = ({
                         pl="16px"
                         py="8px"
                       >
-                        <Flex>
+                        <Flex justify="space-between">
                           <Stack spacing={0} fontSize="12px">
                             <Text fontSize="18px" fontWeight={700}>
                               {movie.title}
@@ -129,6 +203,14 @@ export const SearchModal = ({
                               ))}
                             </Text>
                           </Stack>
+                          <Text
+                            alignSelf="flex-end"
+                            pr="8px"
+                            fontSize="14px"
+                            fontWeight={700}
+                          >
+                            {movie.genre.toLowerCase()}
+                          </Text>
                         </Flex>
                       </Card>
                     ))}

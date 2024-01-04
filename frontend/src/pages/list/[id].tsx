@@ -74,6 +74,9 @@ export default function SingleMoviePage() {
 
         <CardBody>
           <Text>
+            <b>Opis:</b> {data.description}
+          </Text>
+          <Text mt="10px">
             <b>Reżyser:</b> {data.director}
           </Text>
           <Text>
@@ -82,7 +85,7 @@ export default function SingleMoviePage() {
           <Text>
             <b>Główna obsada:</b> {actorsList}
           </Text>
-          <Text>
+          <Text mt="10px">
             <b>Opinie telewidzów:</b>
           </Text>
           {rating.length === 0 ? (

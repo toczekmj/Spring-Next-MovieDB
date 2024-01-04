@@ -97,7 +97,7 @@ export const WithSubnavigation = () => {
           </Flex>
         </Flex>
 
-        <Flex bg="white" borderRadius="4px" flexGrow="0.3">
+        <Flex bg="white" borderRadius="4px" flexGrow="0.4">
           <Button
             w="100%"
             alignContent="flex-start"
@@ -362,15 +362,18 @@ interface NavItem {
   subLabel?: string;
   children?: Array<NavItem>;
   href?: string;
+  visibility?: boolean;
 }
 
 const NAV_ITEMS: Array<NavItem> = [
   {
     label: "Strona Główna",
     href: "/",
+    // visibility: true,
   },
   {
     label: "Dodaj Film",
+    // visibility: true,
     children: [
       {
         label: "Dodaj nowy film",
@@ -387,6 +390,7 @@ const NAV_ITEMS: Array<NavItem> = [
   },
   {
     label: "Moje Listy",
+    // visibility: useAtomValue(,
     children: [
       {
         label: "Moje listy",

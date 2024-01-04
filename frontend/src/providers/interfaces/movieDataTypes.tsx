@@ -6,6 +6,8 @@ export interface MovieData {
   director: string;
   productionYear: string;
   movieId: number;
+  genre: string;
+  description: string;
 }
 
 export interface Rating {
