@@ -3,7 +3,6 @@ package pl.interfejsygraficzne.Model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.Data;
 import org.hibernate.validator.constraints.Range;
 
@@ -21,6 +20,12 @@ public class Movie {
     private String title;
     @NotNull(message = "Pole reżysera nie może pozostać puste.")
     private String director;
+    @NotNull
+    @Column(columnDefinition = "LONGTEXT")
+    private String description;
+    @NotNull
+    private String Genre;
+  
     @NotNull
     @Range(min = 1800, max = 2024, message = "Rok musi być wartością między 1800 a 2024 rokiem")
     private Integer productionYear;

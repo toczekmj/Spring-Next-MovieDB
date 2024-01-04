@@ -7,7 +7,6 @@ import org.springframework.core.env.Environment;
 import pl.interfejsygraficzne.Misc.TerminalColours;
 
 import javax.sql.DataSource;
-import java.util.Objects;
 
 @Configuration
 public class DBConfiguration {
@@ -26,13 +25,30 @@ public class DBConfiguration {
             System.out.println(TerminalColours.ANSI_RED_BACKGROUND + "Please set environment in application.properties" + TerminalColours.ANSI_RESET);
         }
         else {
-            //set environment
-            if(environment.equalsIgnoreCase("dev"))
-                dsb.url("jdbc:mysql://maluch.mikr.us:40213/InterfejsyTest");
-            else if(Objects.requireNonNull(env.getProperty("working.environment")).equalsIgnoreCase("prod"))
-                dsb.url("jdbc:mysql://maluch.mikr.us:40213/Interfejsy");
+            String uri = "jdbc:mysql://maluch.mikr.us:";
+
+            var port = env.getProperty("database.port");
+            if(port == null || port.isEmpty())
+                System.out.println(TerminalColours.ANSI_YELLOW_BACKGROUND + "Please set port in application.properties" + TerminalColours.ANSI_RESET);
             else
-                System.out.println(TerminalColours.ANSI_RED + "Not a valid environment in application.properties" + TerminalColours.ANSI_RESET);
+                uri += port + "/";
+
+            //set environment
+            switch (environment){
+                case "dev":
+                    uri += "InterfejsyTest";
+                    break;
+                case "prod":
+                    uri += "Interfejsy";
+                    break;
+                case "local":
+                    uri = "jdbc:mysql://localhost:3306/InterfejsyLocal";
+                    break;
+                default:
+                    System.out.println(TerminalColours.ANSI_RED + "Not a valid environment in application.properties" + TerminalColours.ANSI_RESET);
+                    break;
+            }
+            dsb.url(uri);
 
             //set password
             String password = env.getProperty("database.password");
