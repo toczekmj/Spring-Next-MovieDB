@@ -19,7 +19,7 @@ public class MovieList {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long movieListId;
-    @Size(min = 3, max = 20, message = "Nie podano nazwy listy!")
+    @Size(min = 3, max = 20, message = "Nazwa listy powinna zawierać między 3 a 20 znaków.")
     @NotNull
     private String listName;
 

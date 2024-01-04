@@ -3,6 +3,7 @@ package pl.interfejsygraficzne.Model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 import org.hibernate.validator.constraints.Range;
 
@@ -16,7 +17,7 @@ public class Movie {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long movieId;
     @NotNull(message = "Pole tytułu filmu nie może pozostać puste.")
-    @Max(value = 40, message = "Tytuł filmu zbyt długi.")
+    @Size(max = 40, message = "Tytuł filmu zbyt długi.")
     private String title;
     @NotNull(message = "Pole reżysera nie może pozostać puste.")
     private String director;
