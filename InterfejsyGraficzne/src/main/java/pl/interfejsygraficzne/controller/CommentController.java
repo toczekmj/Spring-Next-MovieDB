@@ -20,7 +20,7 @@ public class CommentController {
         this.commentService = commentService;
     }
 
-    @Operation(summary = "get all comments that belongs to the movie")
+    @Operation(summary = "add new comment to the movie")
     @PutMapping("/movies/{id}/comments")
     public Comment addComment(@Valid @RequestBody Comment comment, @PathVariable Long id) {
         return commentService.saveComment(comment, id);
