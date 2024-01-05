@@ -24,7 +24,7 @@ public class ActorController {
     @PostMapping("/actors")
     @ResponseStatus(HttpStatus.CREATED)
     public Actor newActor(@Valid @RequestBody Actor actor){
-        return actorService.newActor(actor);
+        return actorService.saveActor(actor);
     }
 
     @Operation(summary = "get all available actor that are currently in the database")
