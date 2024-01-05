@@ -36,17 +36,14 @@ import useSWR from "swr";
 import useSWRMutation from "swr/mutation";
 
 const AddMovie = () => {
-  const urlMovies = `https://www.projektimdb.it/api/v1/movies`;
   const urlActors = `https://www.projektimdb.it/api/v1/actors`;
 
   const { data: actors, error: error2 } = useSWR<Actor[]>(urlActors, fetcher, {
     refreshInterval: 1000,
   });
-  const { data: movies, error } = useSWR<MovieData[]>(urlMovies, fetcher, {
-    refreshInterval: 1000,
-  });
-  if (error || error2) return <div>Failed to fetch</div>;
-  if (!movies || !actors) {
+
+  if (error2) return <div>Failed to fetch</div>;
+  if (!actors) {
     return (
       <Stack h="80vh" justify="center">
         <Center>
@@ -55,17 +52,6 @@ const AddMovie = () => {
       </Stack>
     );
   }
-
-  const uniqueGenres = new Set<string>();
-
-  movies.forEach((movie) => {
-    const genre = movie.genre;
-    if (genre) {
-      uniqueGenres.add(genre);
-    }
-  });
-
-  const genres: string[] = Array.from(uniqueGenres);
 
   const actorsArray = actors.map((actor) => {
     return {
@@ -80,17 +66,16 @@ const AddMovie = () => {
   console.log(actorsArray);
   return (
     <Stack align="center" mb="100px" mt="32px">
-      <AddMovieBox genres={genres} actorsArray={actorsArray} />
+      <AddMovieBox actorsArray={actorsArray} />
     </Stack>
   );
 };
 
 interface AddMovieBoxProps {
-  genres: string[];
   actorsArray: OptionBase[];
 }
 
-const AddMovieBox: React.FC<AddMovieBoxProps> = ({ genres, actorsArray }) => {
+const AddMovieBox: React.FC<AddMovieBoxProps> = ({ actorsArray }) => {
   const {
     isOpen: isOpenActorModal,
     onOpen: onOpenActorModal,
@@ -126,12 +111,12 @@ const AddMovieBox: React.FC<AddMovieBoxProps> = ({ genres, actorsArray }) => {
   const [inputs, setInputs] = useState({
     title: "",
     director: "",
-    genre: "",
+    genre: "Komedia",
     productionYear: 2024,
     // actors: [],
     description: "",
   });
-
+  console.log(inputs);
   const handleInputChange = (
     e:
       | React.ChangeEvent<
@@ -164,6 +149,19 @@ const AddMovieBox: React.FC<AddMovieBoxProps> = ({ genres, actorsArray }) => {
   //   ...inputs,
   //   finalActors,
   // });
+  const genres = [
+    "Komedia",
+    "Kryminał",
+    "Dokument",
+    "Thriller",
+    "Akcja",
+    "ScienceFiction",
+    "Fabularny",
+    "Dramat",
+    "Horror",
+    "Tragikomedia",
+    "Komedia romantyczna",
+  ];
   return (
     <>
       <Stack w="30%" spacing={5}>
