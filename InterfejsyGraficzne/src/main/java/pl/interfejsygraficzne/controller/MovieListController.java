@@ -11,10 +11,7 @@ import pl.interfejsygraficzne.Model.MovieListRequest;
 import pl.interfejsygraficzne.Service.MovieListService;
 
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
-import static java.util.stream.Collectors.toList;
 
 @RestController
 @RequiredArgsConstructor
@@ -29,6 +26,12 @@ public class MovieListController {
     @ResponseStatus(HttpStatus.CREATED)
     public MovieList addMovieList(@Valid @RequestBody MovieListRequest movieListRequest) {
         return movieListService.saveMovieList(movieListRequest);
+    }
+
+    @Operation(summary = "get movie list by id")
+    @GetMapping("/lists/{id}")
+    public MovieList getMovieList(@PathVariable Long id) {
+        return movieListService.getMovieListById(id);
     }
 
     @Operation(summary = "edit movie list")
@@ -48,11 +51,13 @@ public class MovieListController {
         return movieListService.getAllMovieLists();
     }
 
-    @Operation(summary = "get all movies inside movie list")
-    @GetMapping("/lists/{id}")
-    public List<Movie> getMovieListById(@PathVariable Long id) {
-        return movieListService.getAllMoviesByMovieListId(id);
-    }
+
+
+//    @Operation(summary = "get all movies inside movie list - nie wiem jeszcze czy to ma byc")
+//    @GetMapping("/lists/{id}")
+//    public List<Movie> getMovieListById(@PathVariable Long id) {
+//        return movieListService.getAllMoviesByMovieListId(id);
+//    }
 
 
 }

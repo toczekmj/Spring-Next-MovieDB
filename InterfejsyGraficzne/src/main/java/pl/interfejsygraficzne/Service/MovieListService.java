@@ -47,4 +47,8 @@ public class MovieListService {
         existingMovieList.setMovies(movieList.getMovies());
         return movieListRepository.save(existingMovieList);
     }
+
+    public MovieList getMovieListById(Long id) {
+        return movieListRepository.findById(id).orElse(null);
+    }
 }
