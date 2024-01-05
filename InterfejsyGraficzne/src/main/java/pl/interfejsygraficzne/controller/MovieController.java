@@ -31,8 +31,27 @@ public class MovieController {
     @Operation(summary = "add movie to the database")
     @PostMapping("/movies")
     @ResponseStatus(HttpStatus.CREATED)
-    public Movie addMovie(@Valid @RequestBody Movie user){
-        return movieService.saveMovie(user);
+    public Movie addMovie(@Valid @RequestBody Movie movie){
+        Movie m = movieService.saveMovie(movie);
+        var actors = movie.getActors();
+        if(!actors.isEmpty())
+        {
+            var movieId = movie.getMovieId();
+            var size = actors.size();
+
+            for(int i = 0; i < size; i++){
+                var actorId = actors.get(i).getActorId();
+                var response = actorService.attachActorToMovie(movieId, actorId);
+            }
+        }
+
+        var rating = movie.getRating();
+        if(rating != null)
+        {
+            var response = ratingService.addRating(movie.getMovieId(), rating);
+        }
+
+        return m;
     }
 
     @Operation(summary = "get all movies from the database")
