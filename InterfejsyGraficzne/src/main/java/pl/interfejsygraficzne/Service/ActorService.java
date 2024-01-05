@@ -35,7 +35,7 @@ public class ActorService {
         return actorRepository.save(actor);
     }
 
-    public Actor newActor(Actor actor){
+    public Actor saveActor(Actor actor){
         return actorRepository.save(actor);
     }
 

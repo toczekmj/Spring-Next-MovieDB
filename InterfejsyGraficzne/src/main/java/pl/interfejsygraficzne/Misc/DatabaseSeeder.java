@@ -105,7 +105,7 @@ public class DatabaseSeeder {
             Actor a = new Actor();
             a.setFirstName(faker.address().firstName());
             a.setLastName(faker.address().lastName());
-            actorService.newActor(a);
+            actorService.saveActor(a);
         }
 
         actorRepository.restoreAutoIncrement();

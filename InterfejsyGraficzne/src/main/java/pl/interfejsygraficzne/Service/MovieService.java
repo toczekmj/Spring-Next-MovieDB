@@ -21,14 +21,10 @@ public class MovieService {
     }
     public Movie saveMovie(Movie movie){
         Movie m = repository.save(movie);
-        var actors = movie.getActors();
-        if(!actors.isEmpty())
-        {
-            var movieId = movie.getMovieId();
-
+        List<Actor> actors = m.getActors();
+        if (!actors.isEmpty()) {
             for (Actor actor : actors) {
-                var actorId = actor.getActorId();
-                actorService.attachActorToMovie(movieId, actorId);
+                actorService.saveActor(actor);
             }
         }
         return m;
