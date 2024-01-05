@@ -1,118 +1,451 @@
+import { fetcher } from "@/providers/api/fetchers";
+import { Actor, MovieData } from "@/providers/interfaces/movieDataTypes";
 import {
   Button,
+  Center,
   FormControl,
-  FormErrorMessage,
-  FormHelperText,
   FormLabel,
   Input,
   Modal,
   ModalBody,
   ModalCloseButton,
   ModalContent,
-  ModalFooter,
   ModalHeader,
   ModalOverlay,
-  Select,
+  NumberDecrementStepper,
+  NumberIncrementStepper,
+  NumberInput,
+  NumberInputField,
+  NumberInputStepper,
+  Spinner,
+  Select as ChakraSelect,
   Stack,
-  Text,
+  Textarea,
   useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
+import {
+  Select,
+  OptionBase,
+  ActionMeta,
+  MultiValue,
+} from "chakra-react-select";
+import { useState } from "react";
+
+import useSWR from "swr";
+import useSWRMutation from "swr/mutation";
 
 const AddMovie = () => {
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const urlMovies = `https://www.projektimdb.it/api/v1/movies`;
+  const urlActors = `https://www.projektimdb.it/api/v1/actors`;
 
-  return (
-    <Stack h="90vh">
-      <Stack>
-        <Text> Filmy dodane przez ciebie </Text>
+  const { data: actors, error: error2 } = useSWR<Actor[]>(urlActors, fetcher, {
+    refreshInterval: 1000,
+  });
+  const { data: movies, error } = useSWR<MovieData[]>(urlMovies, fetcher, {
+    refreshInterval: 1000,
+  });
+  if (error || error2) return <div>Failed to fetch</div>;
+  if (!movies || !actors) {
+    return (
+      <Stack h="80vh" justify="center">
+        <Center>
+          <Spinner />
+        </Center>
       </Stack>
+    );
+  }
 
-      <Button
-        onClick={onOpen}
-        bg="#deb522"
-        w="100px"
-        fontSize="14px"
-        _hover={{ bg: "#e5c44e" }}
-        justifySelf="flex-start"
-        alignSelf="flex-end"
-        mt={5}
-        mr={5}
-      >
-        Dodaj film
-      </Button>
-      <AddMovieModal isOpen={isOpen} onClose={onClose} />
+  const uniqueGenres = new Set<string>();
+
+  movies.forEach((movie) => {
+    const genre = movie.genre;
+    if (genre) {
+      uniqueGenres.add(genre);
+    }
+  });
+
+  const genres: string[] = Array.from(uniqueGenres);
+
+  const actorsArray = actors.map((actor) => {
+    return {
+      value: {
+        firstName: actor.firstName,
+        lastName: actor.lastName,
+        actorId: actor.actorId,
+      },
+      label: actor.firstName + " " + actor.lastName,
+    };
+  }) as OptionBase[];
+  console.log(actorsArray);
+  return (
+    <Stack align="center" mb="100px" mt="32px">
+      <AddMovieBox genres={genres} actorsArray={actorsArray} />
     </Stack>
   );
 };
 
-const AddMovieModal = ({
+interface AddMovieBoxProps {
+  genres: string[];
+  actorsArray: OptionBase[];
+}
+
+const AddMovieBox: React.FC<AddMovieBoxProps> = ({ genres, actorsArray }) => {
+  const {
+    isOpen: isOpenActorModal,
+    onOpen: onOpenActorModal,
+    onClose: onCloseActorModal,
+  } = useDisclosure();
+
+  const urlMovies = `https://www.projektimdb.it/api/v1/movies`;
+  const sendRequest = async (
+    url: string,
+    {
+      arg,
+    }: {
+      arg: {
+        title: string;
+        director: string;
+        description: string;
+        productionYear: number;
+        // actors: [{ actorId: number }];
+        actors: { actorId: number; firstName: string; lastName: string }[];
+        genre: string;
+      };
+    }
+  ) => {
+    return fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json; charset=UTF-8" },
+      body: JSON.stringify(arg),
+    }).then((res) => res.json());
+  };
+  const { trigger } = useSWRMutation(urlMovies, sendRequest);
+  const toast = useToast();
+
+  const [inputs, setInputs] = useState({
+    title: "",
+    director: "",
+    genre: "",
+    productionYear: 2024,
+    // actors: [],
+    description: "",
+  });
+
+  const handleInputChange = (
+    e:
+      | React.ChangeEvent<
+          HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+        >
+      | { target: { value: string | number } },
+    inputName: string
+  ) => {
+    setInputs((prevInputs) => ({ ...prevInputs, [inputName]: e.target.value }));
+  };
+
+  const [actorSelectValue, setActorSelectValue] = useState<OptionBase[]>([]);
+
+  const handleSelectChange = (selectedOptions: MultiValue<OptionBase>) => {
+    const selectedOptionsArray: OptionBase[] = [...selectedOptions];
+    setActorSelectValue(selectedOptionsArray);
+  };
+  // console.log(actorSelectValue);
+  const finalActors = actorSelectValue.map(
+    (actor) =>
+      //jak tak zrobicie w pracy to was wyrzucą, dlatego jeszcze ją mam
+      //to też only last time in my life
+      (
+        actor as {
+          value: { actorId: number; firstName: string; lastName: string };
+        }
+      ).value
+  );
+  // console.log({
+  //   ...inputs,
+  //   finalActors,
+  // });
+  return (
+    <>
+      <Stack w="30%" spacing={5}>
+        <FormControl isRequired={true}>
+          <FormLabel>Tytuł</FormLabel>
+          <Input
+            placeholder="Tytuł"
+            _placeholder={{ color: "#98947e" }}
+            bg="#faf8ed"
+            border={0}
+            value={inputs.title}
+            onChange={(e) => handleInputChange(e, "title")}
+          />
+        </FormControl>
+        <FormControl isRequired={true}>
+          <FormLabel>Reżyser</FormLabel>
+          <Input
+            placeholder="Reżyser"
+            _placeholder={{ color: "#98947e" }}
+            bg="#faf8ed"
+            border={0}
+            value={inputs.director}
+            onChange={(e) => handleInputChange(e, "director")}
+          />
+        </FormControl>
+        <FormControl isRequired={true}>
+          <FormLabel>Gatunek</FormLabel>
+          <ChakraSelect
+            placeholder=""
+            _placeholder={{ color: "#98947e" }}
+            bg="#faf8ed"
+            border={0}
+            value={inputs.genre}
+            onChange={(e) => handleInputChange(e, "genre")}
+          >
+            {genres.map((genre) => (
+              <option value={genre} key={genre}>
+                {genre}
+              </option>
+            ))}
+          </ChakraSelect>
+        </FormControl>
+
+        <FormControl isRequired={true}>
+          <FormLabel>Rok produkcji</FormLabel>
+          <NumberInput
+            max={2030}
+            min={1888}
+            defaultValue={2024}
+            bg="#faf8ed"
+            value={inputs.productionYear}
+            onChange={(value) =>
+              handleInputChange({ target: { value } }, "productionYear")
+            }
+          >
+            <NumberInputField border={0} />
+            <NumberInputStepper>
+              <NumberIncrementStepper border={0} />
+              <NumberDecrementStepper border={0} />
+            </NumberInputStepper>
+          </NumberInput>
+        </FormControl>
+        <FormControl isRequired={true}>
+          <FormLabel>Aktorzy</FormLabel>
+          <Select
+            isMulti={true}
+            useBasicStyles={true}
+            options={actorsArray}
+            value={actorSelectValue}
+            onChange={handleSelectChange}
+          />
+          <Button
+            variant="link"
+            fontWeight={500}
+            fontSize="14px"
+            mt={2}
+            onClick={onOpenActorModal}
+          >
+            Brak twojego aktora? Dodaj go!
+          </Button>
+          <AddActorModal
+            isOpen={isOpenActorModal}
+            onClose={onCloseActorModal}
+          />
+        </FormControl>
+
+        <FormControl isRequired={true}>
+          <FormLabel>Opis</FormLabel>
+
+          <Textarea
+            placeholder="Opis"
+            _placeholder={{ color: "#98947e" }}
+            bg="#faf8ed"
+            border={0}
+            minH="150px"
+            value={inputs.description}
+            onChange={(e) => handleInputChange(e, "description")}
+          />
+        </FormControl>
+      </Stack>
+      <Button
+        bg="#deb522"
+        w="100px"
+        fontSize="14px"
+        color="white"
+        _hover={{ bg: "white", color: "black" }}
+        mt={5}
+        mr={5}
+        onClick={async () => {
+          try {
+            const result = await trigger(
+              {
+                title: inputs.title,
+                director: inputs.director,
+                description: inputs.description,
+                productionYear: inputs.productionYear,
+                // actors: [
+                //   { actorId: 2, firstName: "Elease", lastName: "Morissette" },
+                // ],
+                actors: finalActors,
+                // actors: [{ actorId: 2 }],
+                genre: inputs.genre,
+              },
+              { revalidate: true }
+            );
+
+            // const result = await trigger({ ...inputs }, { revalidate: true });
+            setActorSelectValue([]);
+            setInputs({
+              title: "",
+              director: "",
+              genre: "",
+              productionYear: 2024,
+              // actors: [],
+              description: "",
+            });
+
+            toast({
+              title: "Dodano film.",
+              description: "Pomyślnie dodano film",
+              status: "success",
+              duration: 2000,
+              isClosable: true,
+            });
+          } catch (e) {
+            toast({
+              title: "Błąd!",
+              description: "Nie udało się dodać filmu.",
+              status: "error",
+              duration: 2000,
+              isClosable: true,
+            });
+          }
+        }}
+      >
+        Dodaj film
+      </Button>
+    </>
+  );
+};
+
+const AddActorModal = ({
   isOpen,
   onClose,
 }: {
   isOpen: boolean;
   onClose: () => void;
 }) => {
+  const urlActors = `https://www.projektimdb.it/api/v1/actors`;
+  const sendRequest = async (
+    url: string,
+    { arg }: { arg: { firstName: string; lastName: string } }
+  ) => {
+    return fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json; charset=UTF-8" },
+      body: JSON.stringify(arg),
+    }).then((res) => res.json());
+  };
+  const { trigger } = useSWRMutation(urlActors, sendRequest);
+  const toast = useToast();
+
+  const [inputs, setInputs] = useState({ firstName: "", lastName: "" });
+
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    inputName: string
+  ) => {
+    setInputs((prevInputs) => ({ ...prevInputs, [inputName]: e.target.value }));
+  };
   return (
     <Modal isOpen={isOpen} onClose={onClose} isCentered={true} size="sm">
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>Dodawanie nowego filmu</ModalHeader>
+        <ModalHeader>Dodaj aktora</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          <FormControl isRequired={true}>
-            <FormLabel>Tytuł</FormLabel>
-            <Input
-              placeholder="Tytuł"
-              _placeholder={{ color: "#626262" }}
-              mb={5}
-            />
-            <FormLabel>Reżyser</FormLabel>
-            <Input
-              placeholder="Reżyser"
-              _placeholder={{ color: "#626262" }}
-              mb={5}
-            />
-            <FormLabel>Rok produkcji</FormLabel>
-            <Select
-              placeholder="2023"
-              _placeholder={{ color: "#626262" }}
-              mb={5}
-            >
-              <option value="2022">2022</option>
-              <option value="2021">2021</option>
-              <option value="2020">2020</option>
-            </Select>
-            <FormLabel>Aktorzy</FormLabel>
-            <Select
-              placeholder="Leonardo DiCaprio"
-              _placeholder={{ color: "#626262" }}
-              mb={5}
-            >
-              <option value="Keanu Reeves">Keanu Reeves</option>
-              <option value="Ryan Gosling">Ryan Gosling</option>
-              <option value="Margot Robbie">Margot Robbie</option>
-            </Select>
-          </FormControl>
-        </ModalBody>
-
-        <ModalFooter
-          display="flex"
-          justifyContent="center"
-          alignContent="center"
-        >
-          <Button
-            bg="#deb522"
-            fontSize="14px"
-            _hover={{ bg: "#e5c44e" }}
-            mr={3}
-            onClick={onClose}
-            w="50%"
+          <Stack
+            spacing={8}
+            mx={"auto"}
+            maxW={"lg"}
+            py={6}
+            px={6}
+            align="center"
           >
-            Zatwierdź
-          </Button>
-        </ModalFooter>
+            <FormControl isRequired={true}>
+              <FormLabel>Imię</FormLabel>
+              <Input
+                placeholder="Imię"
+                _placeholder={{ color: "#98947e" }}
+                bg="#faf8ed"
+                border={0}
+                value={inputs.firstName}
+                onChange={(e) => handleInputChange(e, "firstName")}
+              />
+            </FormControl>
+            <FormControl isRequired={true}>
+              <FormLabel>Nazwisko</FormLabel>
+              <Input
+                placeholder="Nazwisko"
+                _placeholder={{ color: "#98947e" }}
+                bg="#faf8ed"
+                border={0}
+                value={inputs.lastName}
+                onChange={(e) => handleInputChange(e, "lastName")}
+              />
+            </FormControl>
+            <Button
+              bg="#deb522"
+              w="150px"
+              h="40px"
+              fontSize="14px"
+              color="white"
+              _hover={{ bg: "white", color: "black" }}
+              onClick={async () => {
+                try {
+                  if (inputs.firstName === "" || inputs.lastName === "") {
+                    toast({
+                      title: "Błąd!",
+                      description: "Aktor musi mieć imię i nazwisko",
+                      status: "error",
+                      duration: 2000,
+                      isClosable: true,
+                    });
+
+                    return;
+                  }
+                  const result = await trigger(
+                    {
+                      firstName: inputs.firstName,
+                      lastName: inputs.lastName,
+                    },
+                    { revalidate: true }
+                  );
+
+                  onClose();
+                  setInputs({ firstName: "", lastName: "" });
+                  toast({
+                    title: "Dodano komentarz.",
+                    description: "Pomyślnie dodano aktora",
+                    status: "success",
+                    duration: 2000,
+                    isClosable: true,
+                  });
+                } catch (e) {
+                  toast({
+                    title: "Błąd!",
+                    description: "Nie udało się dodać aktora.",
+                    status: "error",
+                    duration: 2000,
+                    isClosable: true,
+                  });
+                }
+              }}
+            >
+              Dodaj aktora
+            </Button>
+          </Stack>
+        </ModalBody>
       </ModalContent>
     </Modal>
   );
 };
+
 export default AddMovie;

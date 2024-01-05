@@ -131,9 +131,9 @@ export default function SingleMoviePage() {
                 isHalf={true}
                 edit={false}
               ></ReactStars>
-              <AddRatingPopover isLoggedIn={isLoggedIn} apiLink={ratingURL} />
             </>
           )}
+          <AddRatingPopover isLoggedIn={isLoggedIn} apiLink={ratingURL} />
         </CardBody>
       </Card>
 
@@ -408,7 +408,11 @@ const CommentModal = ({
                         return;
                       }
 
-                      if (bannedWords.some((word) => input.includes(word))) {
+                      if (
+                        bannedWords.some((word) =>
+                          input.toLowerCase().includes(word)
+                        )
+                      ) {
                         toast({
                           title: "Błąd.",
                           description:

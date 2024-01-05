@@ -25,4 +25,5 @@ export interface Comment {
 export interface Actor {
   firstName: string;
   lastName: string;
+  actorId?: number;
 }
