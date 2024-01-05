@@ -48,6 +48,7 @@ public class MovieController {
         var rating = movie.getRating();
         if(rating != null)
         {
+            rating.setMovieId(movie.getMovieId());
             var response = ratingService.addRating(movie.getMovieId(), rating);
         }
 
