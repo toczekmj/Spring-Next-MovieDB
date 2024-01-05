@@ -40,7 +40,6 @@ public class Movie {
     private List<Actor> actors;
 
     @JsonProperty(defaultValue = "https://imgur.com/i9PqYju.png")
-    @NotNull
     private String photoURL;
 
     @OneToMany(mappedBy = "movie", cascade = CascadeType.REMOVE)
