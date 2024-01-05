@@ -32,9 +32,11 @@ public class MovieList {
     )
     private List<Movie> movies;
 
-    private String movieListURL = "https://imgur.com/i9PqYju.png";
+    private String listURL;
 
-
-
+    @PostPersist
+    private void onPersist() {
+        this.listURL = "https://interfejsy-graficzne.vercel.app/lists/" + this.movieListId;
+    }
 
 }
