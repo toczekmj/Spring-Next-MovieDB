@@ -6,18 +6,9 @@ import org.springframework.context.event.EventListener;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
-import pl.interfejsygraficzne.Model.Actor;
-import pl.interfejsygraficzne.Model.Comment;
-import pl.interfejsygraficzne.Model.Movie;
-import pl.interfejsygraficzne.Model.Rating;
-import pl.interfejsygraficzne.Repository.IActorRepository;
-import pl.interfejsygraficzne.Repository.ICommentRepository;
-import pl.interfejsygraficzne.Repository.IMovieRepository;
-import pl.interfejsygraficzne.Repository.IRatingRepository;
-import pl.interfejsygraficzne.Service.ActorService;
-import pl.interfejsygraficzne.Service.CommentService;
-import pl.interfejsygraficzne.Service.MovieService;
-import pl.interfejsygraficzne.Service.RatingService;
+import pl.interfejsygraficzne.Model.*;
+import pl.interfejsygraficzne.Repository.*;
+import pl.interfejsygraficzne.Service.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,16 +25,20 @@ public class DatabaseSeeder {
     private final IMovieRepository movieRepository;
     private final ICommentRepository commentRepository;
     private final IRatingRepository ratingRepository;
+    private final IMovieListRepository movieListRepository;
     private final CommentService commentService;
     private final ActorService actorService;
     private final MovieService movieService;
     private final RatingService ratingService;
 
-    private final int actorAmount = 5;
-    private final int movieAmount = 10;
-    private final int actorsUpperBoundInMovie = 4;
-    private final int commentUpperBoundInMovie = 5;
-    private final int ratingUpperBoundInMovie = 8;
+    private final int actorAmount = 300;
+    private final int movieAmount = 60;
+    private final int listsAmount = 5;
+    private final int moviesUpperBoundInList = 15;
+    private final int actorsUpperBoundInMovie = 20;
+    private final int commentUpperBoundInMovie = 15;
+    private final int ratingUpperBoundInMovie = 100;
+    private final MovieListService movieListService;
     private Faker faker;
 
     private List<String> genres = new ArrayList<>();
@@ -52,8 +47,10 @@ public class DatabaseSeeder {
                           IMovieRepository movieRepository,
                           ICommentRepository commentRepository,
                           IRatingRepository ratingRepository,
+                          IMovieListRepository movieListRepository,
                           ActorService actorService,
                           MovieService movieService,
+                          MovieListService movieListService,
                           CommentService commentService,
                           RatingService ratingService,
                           Environment env
@@ -62,7 +59,9 @@ public class DatabaseSeeder {
         this.actorRepository = actorRepository;
         this.movieRepository = movieRepository;
         this.ratingRepository = ratingRepository;
+        this.movieListRepository = movieListRepository;
         this.movieService = movieService;
+        this.movieListService = movieListService;
         this.actorService = actorService;
         this.commentService = commentService;
         this.commentRepository = commentRepository;
@@ -78,8 +77,11 @@ public class DatabaseSeeder {
             fillGeneres();
             seedActors();
             seedMovies();
+            seedLists();
         }
+        System.out.println("Seeding Completed" + TColours.ANSI_RESET);
     }
+
 
     private void fillGeneres() {
         genres.add("Komedia");
@@ -109,15 +111,21 @@ public class DatabaseSeeder {
         actorRepository.restoreAutoIncrement();
     }
 
-    private void seedMovies(){
-        //remove all unnecessary stuff from database and reset ID's
-        commentRepository.DeleteData();
-        movieRepository.DeleteData();
-        ratingRepository.DeleteData();
-        movieRepository.setIdCounterToZero();
-        commentRepository.setIdCounterToZero();
-        ratingRepository.setIdCounterToZero();
+    private void seedLists() {
+        for(int i = 0; i < listsAmount; i++){
+            var amount = faker.number().numberBetween(1, moviesUpperBoundInList);
+            MovieListRequest mvr = new MovieListRequest();
+            mvr.setListName("Lista nr " + i);
+            ArrayList<Long> movies = new ArrayList<>();
 
+            for(int j = 0; j < amount; j++)
+                movies.add((long) faker.number().numberBetween(1, movieAmount));
+            mvr.setMovieIds(movies);
+            movieListService.saveMovieList(mvr);
+        }
+    }
+    private void seedMovies(){
+        DeleteContentFromDB();
 
         //create new movie and add Actors, Comments, and Rating
         for(int i = 0; i < movieAmount; i++){
@@ -132,7 +140,7 @@ public class DatabaseSeeder {
             Movie m = new Movie();
             m.setTitle(faker.funnyName().name());
             m.setDirector(faker.address().firstName());
-            m.setProductionYear(valueOf(faker.number().numberBetween(1800, 2050)));
+            m.setProductionYear(valueOf(faker.number().numberBetween(1800, 2024)));
             m.setActors(new ArrayList<>());
             m.setComments(new ArrayList<>());
             m.setRating(null);
@@ -167,14 +175,23 @@ public class DatabaseSeeder {
                 r.setActing(faker.number().numberBetween(1,5));
                 ratingService.addRating(m.getMovieId(), r);
             }
-
-
-
         }
 
         ratingRepository.setIdCounterToAuto();
         commentRepository.setIdCounterToAuto();
         movieRepository.setIdCounterToAuto();
+    }
+
+    private void DeleteContentFromDB() {
+        //remove all unnecessary stuff from database and reset ID's
+        commentRepository.DeleteData();
+        movieListRepository.DeleteLists();
+        movieListRepository.DeleteListsLinks();
+        movieRepository.DeleteData();
+        ratingRepository.DeleteData();
+        movieRepository.setIdCounterToZero();
+        commentRepository.setIdCounterToZero();
+        ratingRepository.setIdCounterToZero();
     }
 
     private Comment generateGibberishComment() {

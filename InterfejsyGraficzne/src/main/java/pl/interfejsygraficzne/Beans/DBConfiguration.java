@@ -4,6 +4,7 @@ import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
+import pl.interfejsygraficzne.Misc.TColours;
 import pl.interfejsygraficzne.Misc.TerminalColours;
 
 import javax.sql.DataSource;
@@ -22,14 +23,16 @@ public class DBConfiguration {
 
         if(environment == null || environment.isEmpty())
         {
-            System.out.println(TerminalColours.ANSI_RED_BACKGROUND + "Please set environment in application.properties" + TerminalColours.ANSI_RESET);
+//            System.out.println(TerminalColours.ANSI_RED_BACKGROUND + "Please set environment in application.properties" + TerminalColours.ANSI_RESET);
+            TerminalColours.PrintColour("Please set environment in application.properties", TColours.ANSI_RED_BACKGROUND);
         }
         else {
             String uri = "jdbc:mysql://maluch.mikr.us:";
 
             var port = env.getProperty("database.port");
             if(port == null || port.isEmpty())
-                System.out.println(TerminalColours.ANSI_YELLOW_BACKGROUND + "Please set port in application.properties" + TerminalColours.ANSI_RESET);
+//                System.out.println(TerminalColours.ANSI_YELLOW_BACKGROUND + "Please set port in application.properties" + TerminalColours.ANSI_RESET);
+                TerminalColours.PrintColour("Please set port in application.properties", TColours.ANSI_YELLOW_BACKGROUND);
             else
                 uri += port + "/";
 
@@ -45,7 +48,7 @@ public class DBConfiguration {
                     uri = "jdbc:mysql://localhost:3306/InterfejsyLocal";
                     break;
                 default:
-                    System.out.println(TerminalColours.ANSI_RED + "Not a valid environment in application.properties" + TerminalColours.ANSI_RESET);
+                    TerminalColours.PrintColour("Not a valid environment in application.properties", TColours.ANSI_RED);
                     break;
             }
             dsb.url(uri);
@@ -55,14 +58,14 @@ public class DBConfiguration {
             if(password != null && !password.isEmpty())
                 dsb.password(password);
             else
-                System.out.println(TerminalColours.ANSI_RED + "Please set password in application.properties" + TerminalColours.ANSI_RESET);
+                TerminalColours.PrintColour("Please set password in application.properties", TColours.ANSI_RED);
 
             //set login
             String login = env.getProperty("database.username");
             if(login != null && !login.isEmpty())
                 dsb.username(login);
             else
-                System.out.println(TerminalColours.ANSI_RED + "Please set username in application.properties" + TerminalColours.ANSI_RESET);
+                TerminalColours.PrintColour("Please set username in application.properties", TColours.ANSI_RED);
         }
         return dsb.build();
     }

@@ -2,6 +2,7 @@ package pl.interfejsygraficzne.Service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import pl.interfejsygraficzne.Model.Actor;
 import pl.interfejsygraficzne.Model.Movie;
 import pl.interfejsygraficzne.Model.Rating;
 import pl.interfejsygraficzne.Repository.IMovieRepository;
@@ -13,16 +14,25 @@ import java.util.List;
 @Transactional
 public class MovieService {
     private final IMovieRepository repository;
-
-
-    public MovieService(IMovieRepository repository) {
+    private final ActorService actorService;
+    public MovieService(IMovieRepository repository, ActorService actorService) {
         this.repository = repository;
+        this.actorService = actorService;
     }
-
     public Movie saveMovie(Movie movie){
-        return repository.save(movie);
-    }
+        Movie m = repository.save(movie);
+        var actors = movie.getActors();
+        if(!actors.isEmpty())
+        {
+            var movieId = movie.getMovieId();
 
+            for (Actor actor : actors) {
+                var actorId = actor.getActorId();
+                actorService.attachActorToMovie(movieId, actorId);
+            }
+        }
+        return m;
+    }
     public List<Movie> getMovies(){
         return repository.findAll();
     }
@@ -43,7 +53,6 @@ public class MovieService {
         repository.deleteById(id);
         return "Movieid " + id + " removed";
     }
-
     public Movie updateMovie(Movie movie){
         Movie existingMovie = repository.findById(movie.getMovieId()).orElseThrow(MovieNotFoundException::new);
         existingMovie.setTitle(movie.getTitle());

@@ -21,7 +21,7 @@ public class RatingService {
         this.ratingRepository = ratingRepository;
     }
 
-    private Rating createNewRating(Long movieID){
+    public Rating createNewRating(Long movieID){
         Rating r = new Rating();
         r.setMovieId(movieID);
         r.setPlot(0);
@@ -32,19 +32,21 @@ public class RatingService {
     }
 
     public Movie addRating(Long movieid, Rating rating){
-
         Movie movie = movieRepository.findById(movieid).orElseThrow(MovieNotFoundException::new);
         Rating currentRating = movie.getRating();
         if(currentRating == null){
             currentRating = createNewRating(movieid);
         }
-
-        currentRating.setPlot(rating.getPlot()+currentRating.getPlot());
-        currentRating.setActing(rating.getActing()+currentRating.getActing());
-        currentRating.setScenography(rating.getScenography()+currentRating.getScenography());
-        currentRating.setVotesCount(currentRating.getVotesCount()+1);
+        else if(currentRating.getMovieId() == null) {
+            currentRating.setMovieId(movieid);
+        }
+        else {
+            currentRating.setPlot(rating.getPlot()+currentRating.getPlot());
+            currentRating.setActing(rating.getActing()+currentRating.getActing());
+            currentRating.setScenography(rating.getScenography()+currentRating.getScenography());
+            currentRating.setVotesCount(currentRating.getVotesCount()+1);
+        }
         movie.setRating(currentRating);
-
         movieService.updateMovie(movie);
         return movie;
     }
