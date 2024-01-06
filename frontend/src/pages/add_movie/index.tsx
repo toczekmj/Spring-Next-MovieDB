@@ -38,9 +38,7 @@ import useSWRMutation from "swr/mutation";
 const AddMovie = () => {
   const urlActors = `https://www.projektimdb.it/api/v1/actors`;
 
-  const { data: actors, error: error2 } = useSWR<Actor[]>(urlActors, fetcher, {
-    refreshInterval: 1000,
-  });
+  const { data: actors, error: error2 } = useSWR<Actor[]>(urlActors, fetcher);
 
   if (error2) return <div>Failed to fetch</div>;
   if (!actors) {
@@ -272,6 +270,24 @@ const AddMovieBox: React.FC<AddMovieBoxProps> = ({ actorsArray }) => {
         mr={5}
         onClick={async () => {
           try {
+            if (
+              inputs.title.length === 0 ||
+              inputs.director.length === 0 ||
+              inputs.description.length === 0 ||
+              inputs.productionYear === 0 ||
+              finalActors.length === 0 ||
+              inputs.genre.length === 0
+            ) {
+              toast({
+                title: "Błąd!",
+                description:
+                  "Nie udało się dodać filmu. Uzupełnij wymagane pola.",
+                status: "error",
+                duration: 2000,
+                isClosable: true,
+              });
+              return;
+            }
             const result = await trigger(
               {
                 title: inputs.title,
@@ -298,7 +314,6 @@ const AddMovieBox: React.FC<AddMovieBoxProps> = ({ actorsArray }) => {
               // actors: [],
               description: "",
             });
-
             toast({
               title: "Dodano film.",
               description: "Pomyślnie dodano film",
