@@ -8,6 +8,7 @@ import pl.interfejsygraficzne.Model.Rating;
 import pl.interfejsygraficzne.Repository.IMovieRepository;
 import pl.interfejsygraficzne.exception.MovieNotFoundException;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -20,13 +21,19 @@ public class MovieService {
         this.actorService = actorService;
     }
     public Movie saveMovie(Movie movie){
-        List<Actor> actors = movie.getActors();
-        if (!actors.isEmpty()) {
-            for (Actor actor : actors) {
-                actorService.saveActor(actor);
-            }
+        //GÓWNO
+        Movie movieWithId = repository.save(movie);
+        List<Actor> actors = movieWithId.getActors();
+        int len = actors.size();
+        movieWithId.setActors(new ArrayList<>());
+
+        for(int i = 0; i < len; i++){
+            Actor a = actorService.getActorById(actors.get(i).getActorId());
+            movieWithId.addActor(a);
+            actorService.saveActor(a);
         }
-        return repository.save(movie);
+        //KONIEC GÓWNA
+        return repository.save(movieWithId);
     }
     public List<Movie> getMovies(){
         return repository.findAll();
