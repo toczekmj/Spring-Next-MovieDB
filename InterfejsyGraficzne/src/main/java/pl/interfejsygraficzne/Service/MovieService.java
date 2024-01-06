@@ -20,14 +20,13 @@ public class MovieService {
         this.actorService = actorService;
     }
     public Movie saveMovie(Movie movie){
-        Movie m = repository.save(movie);
-        List<Actor> actors = m.getActors();
+        List<Actor> actors = movie.getActors();
         if (!actors.isEmpty()) {
             for (Actor actor : actors) {
                 actorService.saveActor(actor);
             }
         }
-        return m;
+        return repository.save(movie);
     }
     public List<Movie> getMovies(){
         return repository.findAll();
