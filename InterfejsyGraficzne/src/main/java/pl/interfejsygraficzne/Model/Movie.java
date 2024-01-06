@@ -38,9 +38,8 @@ public class Movie {
 
     @ManyToMany(mappedBy = "movies", cascade = CascadeType.REMOVE)
     private List<Actor> actors;
-
-    @JsonProperty(defaultValue = "https://imgur.com/i9PqYju.png")
-    private String photoURL;
+    
+    private String photoURL = "https://imgur.com/i9PqYju.png";
 
     @OneToMany(mappedBy = "movie", cascade = CascadeType.REMOVE)
     private List<Comment> comments;
