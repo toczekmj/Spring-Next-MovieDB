@@ -8,6 +8,7 @@ export interface MovieData {
   movieId: number;
   genre: string;
   description: string;
+  photoURL?: string;
 }
 
 export interface Rating {
@@ -26,4 +27,11 @@ export interface Actor {
   firstName: string;
   lastName: string;
   actorId?: number;
+}
+
+export interface MovieList {
+  movies: MovieData[];
+  movieListId: number;
+  listURL: string;
+  listName: string;
 }

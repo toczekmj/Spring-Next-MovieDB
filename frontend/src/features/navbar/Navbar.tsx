@@ -374,6 +374,7 @@ const NAV_ITEMS: Array<NavItem> = [
   {
     label: "Dodaj Film",
     // visibility: true,
+
     children: [
       {
         label: "Dodaj nowy film",
@@ -391,10 +392,11 @@ const NAV_ITEMS: Array<NavItem> = [
   {
     label: "Moje Listy",
     // visibility: useAtomValue(,
+    href: "/my_list",
     children: [
       {
         label: "Moje listy",
-        subLabel: "Przeglądaj własne utworzone listy z możliwością edytowania.",
+        subLabel: "Stwórz swoje listy filmowe!",
         href: "/my_list",
       },
       {

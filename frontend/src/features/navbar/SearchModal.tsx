@@ -180,7 +180,7 @@ export const SearchModal = ({
                         as="a"
                         href={`/list/${movie.movieId}`}
                         w="90%"
-                        bg="#f7f2ed"
+                        bg="#fcf7e9"
                         pl="16px"
                         py="8px"
                       >
