@@ -20,19 +20,16 @@ public class MovieService {
         this.repository = repository;
         this.actorService = actorService;
     }
-    public Movie saveMovie(Movie movie){
-        //GÓWNO
+    public Movie saveMovie(Movie movie) {
         Movie movieWithId = repository.save(movie);
-        List<Actor> actors = movieWithId.getActors();
-        int len = actors.size();
+        List<Long> actorIds = movieWithId.getActors().stream().map(Actor::getActorId).toList();
         movieWithId.setActors(new ArrayList<>());
-
-        for(int i = 0; i < len; i++){
-            Actor a = actorService.getActorById(actors.get(i).getActorId());
-            movieWithId.addActor(a);
-            actorService.saveActor(a);
+        for(Long id : actorIds){
+            Actor a = actorService.getActorById(id);
+            movieWithId.addActor(
+                actorService.saveActor(a)
+            );
         }
-        //KONIEC GÓWNA
         return repository.save(movieWithId);
     }
     public List<Movie> getMovies(){
