@@ -20,6 +20,9 @@ public class MovieService {
         this.actorService = actorService;
     }
     public Movie saveMovie(Movie movie){
+        if (movie.getPhotoURL().isEmpty()) {
+            movie.setPhotoURL("https://imgur.com/i9PqYju.png");
+        }
         List<Actor> actors = movie.getActors();
         if (!actors.isEmpty()) {
             for (Actor actor : actors) {
