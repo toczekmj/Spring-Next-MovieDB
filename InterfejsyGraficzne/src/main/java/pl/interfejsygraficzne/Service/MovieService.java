@@ -21,9 +21,6 @@ public class MovieService {
         this.actorService = actorService;
     }
     public Movie saveMovie(Movie movie) {
-        if (movie.getPhotoURL() == null) {
-            movie.setPhotoURL("https://imgur.com/i9PqYju.png");
-        }
         Movie movieWithId = repository.save(movie);
         List<Long> actorIds = movieWithId.getActors().stream().map(Actor::getActorId).toList();
         movieWithId.setActors(new ArrayList<>());

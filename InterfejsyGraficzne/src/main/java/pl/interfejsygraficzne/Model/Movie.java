@@ -1,8 +1,6 @@
 package pl.interfejsygraficzne.Model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
@@ -38,8 +36,8 @@ public class Movie {
 
     @ManyToMany(mappedBy = "movies", cascade = CascadeType.REMOVE)
     private List<Actor> actors;
-    
-    private String photoURL;
+
+    private String linkURL = "https://imgur.com/i9PqYju.png";
 
     @OneToMany(mappedBy = "movie", cascade = CascadeType.REMOVE)
     private List<Comment> comments;
