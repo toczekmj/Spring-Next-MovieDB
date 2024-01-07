@@ -4,6 +4,7 @@ import {
   Box,
   Center,
   Grid,
+  Image,
   GridItem,
   HStack,
   Spinner,
@@ -27,7 +28,6 @@ const Home = () => {
       </Stack>
     );
   }
-
   const sortedMoviesPopularity = data.sort((a, b) => {
     if (a.rating === null) return 1;
     if (b.rating === null) return -1;
@@ -62,30 +62,43 @@ const Home = () => {
           <Text fontSize="26px" fontWeight="700">
             Polecane filmy
           </Text>
-          <Grid templateColumns="repeat(2, 1fr)" gap={4} h="100%">
+          <Grid templateColumns="repeat(2, 1fr)" gap={4}>
             {topThreeMovies.map((movie, index) => (
               <GridItem
-                display="flex"
-                justifyContent="center"
-                alignContent="center"
                 key={index}
+                position="relative"
                 bg="gray"
                 colSpan={index === 0 ? 2 : 1}
                 as="a"
                 href={`list/${movie.movieId}`}
-                _hover={{
-                  bg: "#d3eaf2",
-                  transition: "background-color 0.3s ease-in-out",
-                }}
+                overflow="hidden"
+                className="group"
               >
+                <Image
+                  src={
+                    movie.photoURL?.endsWith("png") ||
+                    movie.photoURL?.endsWith("jpg")
+                      ? movie.photoURL
+                      : "https://imgur.com/i9PqYju.png"
+                  }
+                  transition="transform 0.3s ease-in-out"
+                  _groupHover={{
+                    transform: "scale(1.1)",
+                  }}
+                  alt={"photo"}
+                />
                 <Text
-                  fontSize="24px"
-                  h="fit-content"
+                  _groupHover={{}}
+                  position="absolute"
                   w="100%"
+                  top="50%"
+                  left="50%"
+                  transform="translate(-50%, -50%)"
+                  fontSize="24px"
                   textAlign="center"
-                  alignSelf="center"
-                  bg="rgba(222, 181, 34, 0.5)"
+                  bg="rgba(222, 181, 34, 0.3)"
                   color="white"
+                  zIndex={1}
                 >
                   {movie.title}
                 </Text>
@@ -101,21 +114,28 @@ const Home = () => {
           <Grid templateRows="repeat(6, 1fr)" gap={4} h="100%">
             {newestMovies.map((movie) => (
               <GridItem
-                key={movie.title}
+                key={movie.movieId}
                 display="flex"
                 as="a"
                 href={`list/${movie.movieId}`}
                 _hover={{ textDecoration: "underline" }}
                 role="group"
               >
-                <Box
-                  bg="gray"
+                <Image
                   w="125px"
                   mr="15px"
+                  src={
+                    movie.photoURL?.endsWith("png") ||
+                    movie.photoURL?.endsWith("jpg")
+                      ? movie.photoURL
+                      : "https://imgur.com/i9PqYju.png"
+                  }
+                  transition="transform 0.3s ease-in-out"
                   _groupHover={{
-                    bg: "#d3eaf2",
-                    transition: "background-color 0.3s ease-in-out",
+                    transform: "scale(1.1)",
+                    // transition: "transform 0.3s ease-in-out",
                   }}
+                  alt={"photo"}
                 />
                 <Text alignSelf="center">{movie.title}</Text>
               </GridItem>

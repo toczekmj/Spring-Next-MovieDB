@@ -91,6 +91,7 @@ const AddMovieBox: React.FC<AddMovieBoxProps> = ({ actorsArray }) => {
         director: string;
         description: string;
         productionYear: number;
+        linkURL?: string;
         // actors: [{ actorId: number }];
         actors: { actorId: number; firstName: string; lastName: string }[];
         genre: string;
@@ -114,7 +115,13 @@ const AddMovieBox: React.FC<AddMovieBoxProps> = ({ actorsArray }) => {
     // actors: [],
     description: "",
   });
-  console.log(inputs);
+
+  const [linkURL, setlinkURL] = useState<string>("");
+
+  const handleLinkURLChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setlinkURL(event.target.value);
+  };
+
   const handleInputChange = (
     e:
       | React.ChangeEvent<
@@ -254,9 +261,20 @@ const AddMovieBox: React.FC<AddMovieBoxProps> = ({ actorsArray }) => {
             _placeholder={{ color: "#98947e" }}
             bg="#faf8ed"
             border={0}
-            minH="150px"
+            minH="100px"
             value={inputs.description}
             onChange={(e) => handleInputChange(e, "description")}
+          />
+        </FormControl>
+        <FormControl>
+          <FormLabel>Link do miniatury (opcjonalne)</FormLabel>
+          <Input
+            placeholder="https://i.imgur.com/i9PqYju.png"
+            _placeholder={{ color: "#98947e" }}
+            bg="#faf8ed"
+            border={0}
+            value={linkURL}
+            onChange={(e) => handleLinkURLChange(e)}
           />
         </FormControl>
       </Stack>
@@ -270,6 +288,29 @@ const AddMovieBox: React.FC<AddMovieBoxProps> = ({ actorsArray }) => {
         mr={5}
         onClick={async () => {
           try {
+            if (inputs.productionYear > 2024) {
+              toast({
+                title: "Błąd!",
+                description:
+                  "Nie udało się dodać filmu. rok produkcji musi być mniejszy niż 2024.",
+                status: "error",
+                duration: 2000,
+                isClosable: true,
+              });
+              return;
+            }
+            if (linkURL !== "" && !linkURL.endsWith("jpg" || "png")) {
+              toast({
+                title: "Błąd!",
+                description:
+                  "Nie udało się dodać filmu. Link musi kończyć się na 'jpg' lub 'png'.",
+                status: "error",
+                duration: 2000,
+                isClosable: true,
+              });
+              return;
+            }
+
             if (
               inputs.title.length === 0 ||
               inputs.director.length === 0 ||
@@ -299,6 +340,7 @@ const AddMovieBox: React.FC<AddMovieBoxProps> = ({ actorsArray }) => {
                 // ],
                 actors: finalActors,
                 // actors: [{ actorId: 2 }],
+                linkURL: linkURL,
                 genre: inputs.genre,
               },
               { revalidate: true }
@@ -306,6 +348,7 @@ const AddMovieBox: React.FC<AddMovieBoxProps> = ({ actorsArray }) => {
 
             // const result = await trigger({ ...inputs }, { revalidate: true });
             setActorSelectValue([]);
+            setlinkURL("");
             setInputs({
               title: "",
               director: "",
