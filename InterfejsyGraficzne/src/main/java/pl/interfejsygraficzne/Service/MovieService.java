@@ -21,7 +21,7 @@ public class MovieService {
         this.actorService = actorService;
     }
     public Movie saveMovie(Movie movie) {
-        if (movie.getPhotoURL().isEmpty()) {
+        if (movie.getPhotoURL() == null) {
             movie.setPhotoURL("https://imgur.com/i9PqYju.png");
         }
         Movie movieWithId = repository.save(movie);
