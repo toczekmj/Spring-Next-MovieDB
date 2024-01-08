@@ -5,7 +5,6 @@ import { ChakraProvider as Provider, extendTheme } from "@chakra-ui/react";
 import Footer from "@/features/footer/Footer";
 import { WithSubnavigation } from "@/features/navbar/Navbar";
 import { Button } from "@/providers/theme/components/button";
-import { Switch } from "@/providers/theme/components/switch";
 
 import { Input } from "./components/textInput";
 

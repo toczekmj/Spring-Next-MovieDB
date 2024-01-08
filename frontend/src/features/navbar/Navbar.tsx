@@ -6,6 +6,7 @@ import {
   Search2Icon,
 } from "@chakra-ui/icons";
 import {
+  Avatar,
   Box,
   Button,
   Collapse,
@@ -16,7 +17,11 @@ import {
   InputGroup,
   InputLeftElement,
   Popover,
+  PopoverArrow,
+  PopoverBody,
+  PopoverCloseButton,
   PopoverContent,
+  PopoverHeader,
   PopoverTrigger,
   Stack,
   Text,
@@ -25,14 +30,29 @@ import {
 } from "@chakra-ui/react";
 
 import { LoginModal, SignInModal } from "./LoginModals";
+import { SearchModal } from "./SearchModal";
+import { useAtom, useAtomValue } from "jotai";
+import { loginAtom } from "./atoms/loginAtom";
 
 export const WithSubnavigation = () => {
   const { isOpen, onToggle } = useDisclosure();
+
+  const [loginValue, setLoginValue] = useAtom(loginAtom);
+
+  const toggleValue = () => {
+    setLoginValue((prevValue) => !prevValue);
+  };
 
   const {
     isOpen: isOpenLoginModal,
     onOpen: onOpenLoginModal,
     onClose: onCloseLoginModal,
+  } = useDisclosure();
+
+  const {
+    isOpen: isOpenSearchModal,
+    onOpen: onOpenSearchModal,
+    onClose: onCloseSearchModal,
   } = useDisclosure();
 
   const {
@@ -77,57 +97,102 @@ export const WithSubnavigation = () => {
           </Flex>
         </Flex>
 
-        <InputGroup maxW="500px">
-          <InputLeftElement pointerEvents="none">
-            <Search2Icon color="#deb522" />
-          </InputLeftElement>
-          <Input
-            type="tel"
-            placeholder="Wyszukaj filmy lub aktorów"
-            bg="white"
-            border="none"
-          />
-        </InputGroup>
-
+        <Flex bg="white" borderRadius="4px" flexGrow="0.4">
+          <Button
+            w="100%"
+            alignContent="flex-start"
+            justifyContent="flex-start"
+            onClick={onOpenSearchModal}
+          >
+            <Search2Icon color="#deb522" mr="10px" />
+            <Text bg="white" fontWeight={500}>
+              Wyszukaj filmy
+            </Text>
+          </Button>
+        </Flex>
+        <SearchModal onClose={onCloseSearchModal} isOpen={isOpenSearchModal} />
         <Stack
           flex={{ base: 1, md: 0 }}
           justify={"flex-end"}
           direction={"row"}
           spacing={6}
         >
-          <Button
-            as={"a"}
-            fontSize={"sm"}
-            fontWeight={400}
-            variant={"link"}
-            // href={"#"}
-            onClick={onOpenLoginModal}
-          >
-            Zaloguj się
-          </Button>
-          <LoginModal onClose={onCloseLoginModal} isOpen={isOpenLoginModal} />
-          <Button
-            as={"a"}
-            display={{ base: "none", md: "inline-flex" }}
-            fontSize={"sm"}
-            fontWeight={600}
-            color={"black"}
-            bg={"white"}
-            onClick={onOpenSignInModal}
-            _hover={{
-              bg: "gray",
-            }}
-          >
-            Zarejestruj się
-          </Button>
-          <SignInModal
-            onClose={onCloseSignInModal}
-            isOpen={isOpenSignInModal}
-            onClick={() => {
-              onOpenLoginModal();
-              onCloseSignInModal();
-            }}
-          />
+          {loginValue ? (
+            <Popover>
+              <PopoverTrigger>
+                <Avatar
+                  src="https://lukasz.langa.pl/a01d8a5d-3631-4c5b-8b68-a4750d4d0b84/assets/bateman.jpg"
+                  w="40px"
+                  h="40px"
+                  cursor="pointer"
+                />
+              </PopoverTrigger>
+              <PopoverContent
+                w="100px"
+                border={0}
+                _focus={{ boxShadow: "xl" }}
+                boxShadow="xl"
+              >
+                <PopoverArrow />
+                <PopoverBody
+                  display="flex"
+                  alignContent="center"
+                  justifyContent="center"
+                >
+                  <Button
+                    as={"a"}
+                    fontSize={"sm"}
+                    fontWeight={700}
+                    color="#342a08"
+                    variant={"link"}
+                    onClick={toggleValue}
+                    cursor="pointer"
+                  >
+                    Wyloguj
+                  </Button>
+                </PopoverBody>
+              </PopoverContent>
+            </Popover>
+          ) : (
+            <>
+              <Button
+                as={"a"}
+                fontSize={"sm"}
+                fontWeight={700}
+                color="#342a08"
+                variant={"link"}
+                onClick={onOpenLoginModal}
+              >
+                Zaloguj się
+              </Button>
+              <LoginModal
+                onClose={onCloseLoginModal}
+                isOpen={isOpenLoginModal}
+              />
+              <Button
+                as={"a"}
+                display={{ base: "none", md: "inline-flex" }}
+                fontSize={"sm"}
+                fontWeight={600}
+                color={"black"}
+                bg={"white"}
+                onClick={onOpenSignInModal}
+                _hover={{
+                  bg: "gray",
+                }}
+              >
+                Zarejestruj się
+              </Button>
+              <SignInModal
+                onClose={onCloseSignInModal}
+                isOpen={isOpenSignInModal}
+                onClick={() => {
+                  onOpenLoginModal();
+                  onCloseSignInModal();
+                }}
+              />
+            </>
+          )}
         </Stack>
       </Flex>
 
@@ -139,14 +204,13 @@ export const WithSubnavigation = () => {
 };
 
 const DesktopNav = () => {
-  const linkColor = useColorModeValue("gray.600", "gray.200");
   const linkHoverColor = useColorModeValue("gray.800", "white");
   const popoverContentBgColor = useColorModeValue("white", "gray.800");
 
   return (
     <Stack direction={"row"} spacing={4}>
       {NAV_ITEMS.map((navItem) => (
-        <Box key={navItem.label} _hover={{ textDecoration: "underline" }}>
+        <Box key={navItem.label}>
           <Popover trigger={"hover"} placement={"bottom-start"}>
             <PopoverTrigger>
               <Box
@@ -154,10 +218,10 @@ const DesktopNav = () => {
                 p={2}
                 href={navItem.href ?? "#"}
                 fontSize={"sm"}
-                fontWeight={500}
-                color={linkColor}
+                fontWeight={700}
+                color={"#342a08"}
                 _hover={{
-                  textDecoration: "none",
+                  textDecoration: "underline",
                   color: linkHoverColor,
                 }}
               >
@@ -298,15 +362,19 @@ interface NavItem {
   subLabel?: string;
   children?: Array<NavItem>;
   href?: string;
+  visibility?: boolean;
 }
 
 const NAV_ITEMS: Array<NavItem> = [
   {
     label: "Strona Główna",
     href: "/",
+    // visibility: true,
   },
   {
     label: "Dodaj Film",
+    // visibility: true,
+
     children: [
       {
         label: "Dodaj nowy film",
@@ -316,23 +384,25 @@ const NAV_ITEMS: Array<NavItem> = [
       {
         label: "Dodaj serial",
         subLabel: "Dostępne już wkrótce!",
-        href: "404",
+        href: "/404",
       },
     ],
     href: "/add_movie",
   },
   {
     label: "Moje Listy",
+    // visibility: useAtomValue(,
+    href: "/my_list",
     children: [
       {
         label: "Moje listy",
-        subLabel: "Przeglądaj własne utworzone listy z możliwością edytowania.",
+        subLabel: "Stwórz swoje listy filmowe!",
         href: "/my_list",
       },
       {
         label: "Listy moich znajomych",
         subLabel: "Przeglądaj listy swoich znajomych i je oceniaj!",
-        href: "#",
+        href: "/404",
       },
     ],
   },
