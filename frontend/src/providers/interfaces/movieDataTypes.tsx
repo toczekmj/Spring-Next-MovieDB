@@ -12,7 +12,7 @@ export interface MovieData {
 }
 
 export interface Rating {
-  votesCount: string;
+  votesCount: number;
   plot: string;
   acting: string;
   scenography: string;

@@ -61,7 +61,6 @@ const AddMovie = () => {
       label: actor.firstName + " " + actor.lastName,
     };
   }) as OptionBase[];
-  console.log(actorsArray);
   return (
     <Stack align="center" mb="100px" mt="32px">
       <AddMovieBox actorsArray={actorsArray} />
@@ -139,7 +138,6 @@ const AddMovieBox: React.FC<AddMovieBoxProps> = ({ actorsArray }) => {
     const selectedOptionsArray: OptionBase[] = [...selectedOptions];
     setActorSelectValue(selectedOptionsArray);
   };
-  // console.log(actorSelectValue);
   const finalActors = actorSelectValue.map(
     (actor) =>
       //jak tak zrobicie w pracy to was wyrzucą, dlatego jeszcze ją mam
@@ -150,10 +148,6 @@ const AddMovieBox: React.FC<AddMovieBoxProps> = ({ actorsArray }) => {
         }
       ).value
   );
-  // console.log({
-  //   ...inputs,
-  //   finalActors,
-  // });
   const genres = [
     "Komedia",
     "Kryminał",

@@ -372,7 +372,7 @@ const NAV_ITEMS: Array<NavItem> = [
     // visibility: true,
   },
   {
-    label: "Dodaj Film",
+    label: "Filmy",
     // visibility: true,
 
     children: [
@@ -382,12 +382,12 @@ const NAV_ITEMS: Array<NavItem> = [
         href: "/add_movie",
       },
       {
-        label: "Dodaj serial",
-        subLabel: "Dostępne już wkrótce!",
-        href: "/404",
+        label: "Przeglądarka filmów",
+        subLabel: "Zobacz wszystkie dostępne filmy!",
+        href: "/all",
       },
     ],
-    href: "/add_movie",
+    href: "/all",
   },
   {
     label: "Moje Listy",
@@ -395,14 +395,14 @@ const NAV_ITEMS: Array<NavItem> = [
     href: "/my_list",
     children: [
       {
-        label: "Moje listy",
+        label: "Stwórz listę",
         subLabel: "Stwórz swoje listy filmowe!",
-        href: "/my_list",
+        href: "/create_list",
       },
       {
-        label: "Listy moich znajomych",
-        subLabel: "Przeglądaj listy swoich znajomych i je oceniaj!",
-        href: "/404",
+        label: "Moje listy",
+        subLabel: "Zobacz swoje listy filmowe",
+        href: "/my_list",
       },
     ],
   },

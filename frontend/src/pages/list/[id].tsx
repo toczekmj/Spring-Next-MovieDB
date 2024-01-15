@@ -78,6 +78,16 @@ export default function SingleMoviePage() {
 
   const rating = data.rating !== null ? fetchRating(data.rating) : [];
 
+  const numberOfVotes =
+    data.rating !== null
+      ? data.rating.votesCount === 1
+        ? `(${data.rating.votesCount} głos)`
+        : data.rating.votesCount % 10 === 2 ||
+            data.rating.votesCount % 10 === 3 ||
+            data.rating.votesCount % 10 === 4
+          ? `(${data.rating.votesCount} głosy)`
+          : `(${data.rating.votesCount} głosów)`
+      : "";
   return (
     <Stack align="center" justifyContent="center" spacing="50px" my="100px">
       <Card w="40%" boxShadow="lg">
@@ -101,7 +111,7 @@ export default function SingleMoviePage() {
             <b>Główna obsada:</b> {actorsList}
           </Text>
           <Text mt="10px">
-            <b>Opinie telewidzów:</b>
+            <b>Opinie telewidzów:</b> {numberOfVotes}
           </Text>
           {rating.length === 0 ? (
             <Text>Brak ocen dla podanego filmu</Text>
