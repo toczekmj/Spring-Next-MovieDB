@@ -18,6 +18,7 @@ import {
   ModalOverlay,
   Stack,
   Text,
+  Tooltip,
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { loginAtom } from "./atoms/loginAtom";
@@ -77,18 +78,22 @@ export const SignInModal = ({
               </InputGroup>
             </FormControl>
             <Stack spacing={10} pt={2}>
-              <Button
-                loadingText="Submitting"
-                size="lg"
-                bg={"#deb522"}
-                color={"white"}
-                _hover={{
-                  bg: "white",
-                  color: "#342a08",
-                }}
+              <Tooltip
+                bg="black"
+                textAlign="center"
+                fontSize="16px"
+                label="Ta funkcja zostanie wprowadzona w przyszłości. Obecnie możesz się jedynie zalogować. Przejdź do zakładki logowania aby w pełni korzystać z serwisu."
               >
-                Zarejestruj się{" "}
-              </Button>
+                <Button
+                  loadingText="Submitting"
+                  size="lg"
+                  bg={"#deb522"}
+                  color={"white"}
+                  isDisabled={true}
+                >
+                  Zarejestruj się
+                </Button>
+              </Tooltip>
             </Stack>
             <Stack pt={6}>
               <Text align={"center"}>

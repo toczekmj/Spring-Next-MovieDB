@@ -103,8 +103,28 @@ const AddMovieBox: React.FC<AddMovieBoxProps> = ({ actorsArray }) => {
       body: JSON.stringify(arg),
     }).then((res) => res.json());
   };
-  const { trigger } = useSWRMutation(urlMovies, sendRequest);
   const toast = useToast();
+
+  const { trigger } = useSWRMutation(urlMovies, sendRequest, {
+    onSuccess: () => {
+      toast({
+        title: "Dodano film.",
+        description: "Pomyślnie dodano film.",
+        status: "success",
+        duration: 2000,
+        isClosable: true,
+      });
+    },
+    onError: () => {
+      toast({
+        title: "Błąd!",
+        description: "Nie udało się dodać filmu.",
+        status: "error",
+        duration: 2000,
+        isClosable: true,
+      });
+    },
+  });
 
   const [inputs, setInputs] = useState({
     title: "",
@@ -207,7 +227,7 @@ const AddMovieBox: React.FC<AddMovieBoxProps> = ({ actorsArray }) => {
         <FormControl isRequired={true}>
           <FormLabel>Rok produkcji</FormLabel>
           <NumberInput
-            max={2030}
+            max={2024}
             min={1888}
             defaultValue={2024}
             bg="#faf8ed"
@@ -293,18 +313,6 @@ const AddMovieBox: React.FC<AddMovieBoxProps> = ({ actorsArray }) => {
               });
               return;
             }
-            if (linkURL !== "" && !linkURL.endsWith("jpg" || "png")) {
-              toast({
-                title: "Błąd!",
-                description:
-                  "Nie udało się dodać filmu. Link musi kończyć się na 'jpg' lub 'png'.",
-                status: "error",
-                duration: 2000,
-                isClosable: true,
-              });
-              return;
-            }
-
             if (
               inputs.title.length === 0 ||
               inputs.director.length === 0 ||
@@ -340,7 +348,6 @@ const AddMovieBox: React.FC<AddMovieBoxProps> = ({ actorsArray }) => {
               { revalidate: true }
             );
 
-            // const result = await trigger({ ...inputs }, { revalidate: true });
             setActorSelectValue([]);
             setlinkURL("");
             setInputs({
@@ -350,13 +357,6 @@ const AddMovieBox: React.FC<AddMovieBoxProps> = ({ actorsArray }) => {
               productionYear: 2024,
               // actors: [],
               description: "",
-            });
-            toast({
-              title: "Dodano film.",
-              description: "Pomyślnie dodano film",
-              status: "success",
-              duration: 2000,
-              isClosable: true,
             });
           } catch (e) {
             toast({

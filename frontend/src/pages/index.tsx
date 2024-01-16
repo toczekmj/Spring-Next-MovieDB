@@ -10,14 +10,16 @@ import {
   Spinner,
   Stack,
   Text,
+  Button,
 } from "@chakra-ui/react";
 import Head from "next/head";
+import { useRouter } from "next/router";
 import useSWR from "swr";
 
 const Home = () => {
   const APIURL = `https://www.projektimdb.it/api/v1/movies`;
   const { data, error, isLoading } = useSWR<MovieData[]>(APIURL, fetcher);
-
+  const router = useRouter();
   if (error) return <div>Failed to fetch</div>;
   if (isLoading || !data) {
     return (
@@ -105,6 +107,18 @@ const Home = () => {
               </GridItem>
             ))}
           </Grid>
+          <Button
+            fontSize="20px"
+            fontWeight="700"
+            w="fit-content"
+            _hover={{ textDecoration: "underline" }}
+            alignSelf={"flex-end"}
+            onClick={() => {
+              router.push("/all");
+            }}
+          >
+            Pokaż wszystkie
+          </Button>
         </Stack>
 
         <Stack w="20vw" h="60vh">
@@ -124,12 +138,7 @@ const Home = () => {
                 <Image
                   w="125px"
                   mr="15px"
-                  src={
-                    movie.photoURL?.endsWith("png") ||
-                    movie.photoURL?.endsWith("jpg")
-                      ? movie.photoURL
-                      : "https://imgur.com/i9PqYju.png"
-                  }
+                  src={movie.photoURL ?? "https://imgur.com/i9PqYju.png"}
                   transition="transform 0.3s ease-in-out"
                   _groupHover={{
                     transform: "scale(1.1)",

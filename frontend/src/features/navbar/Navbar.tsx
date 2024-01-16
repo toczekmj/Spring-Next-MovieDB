@@ -207,9 +207,10 @@ const DesktopNav = () => {
   const linkHoverColor = useColorModeValue("gray.800", "white");
   const popoverContentBgColor = useColorModeValue("white", "gray.800");
 
+  const isLoggedIn = useAtomValue(loginAtom);
   return (
     <Stack direction={"row"} spacing={4}>
-      {NAV_ITEMS.map((navItem) => (
+      {NAV_ITEMS.map((navItem, index) => (
         <Box key={navItem.label}>
           <Popover trigger={"hover"} placement={"bottom-start"}>
             <PopoverTrigger>
@@ -224,6 +225,7 @@ const DesktopNav = () => {
                   textDecoration: "underline",
                   color: linkHoverColor,
                 }}
+                display={index > 0 && !isLoggedIn ? "none" : ""}
               >
                 {navItem.label}
               </Box>

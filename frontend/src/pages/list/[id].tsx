@@ -221,7 +221,26 @@ const AddRatingPopover = ({
       body: JSON.stringify(arg),
     }).then((res) => res.json());
   };
-  const { trigger } = useSWRMutation(apiLink, sendRequest);
+  const { trigger } = useSWRMutation(apiLink, sendRequest, {
+    onSuccess: () => {
+      toast({
+        title: "Dodano recenzję.",
+        description: "Pomyślnie dodano opinię",
+        status: "success",
+        duration: 2000,
+        isClosable: true,
+      });
+    },
+    onError: () => {
+      toast({
+        title: "Błąd!",
+        description: "Nie udało się dodać opinii. Spróbuj ponownie",
+        status: "success",
+        duration: 2000,
+        isClosable: true,
+      });
+    },
+  });
   const toast = useToast();
 
   return (
@@ -313,14 +332,6 @@ const AddRatingPopover = ({
                       );
 
                       onClose();
-
-                      toast({
-                        title: "Dodano komentarz.",
-                        description: "Pomyślnie dodano opinię",
-                        status: "success",
-                        duration: 2000,
-                        isClosable: true,
-                      });
                     } catch (e) {
                       toast({
                         title: "Błąd.",
@@ -375,7 +386,26 @@ const CommentModal = ({
       body: JSON.stringify(arg),
     }).then((res) => res.json());
   };
-  const { trigger } = useSWRMutation(apiurl, sendRequest);
+  const { trigger } = useSWRMutation(apiurl, sendRequest, {
+    onSuccess: () => {
+      toast({
+        title: "Dodano komentarz.",
+        description: "Pomyślnie dodano komentarz",
+        status: "success",
+        duration: 2000,
+        isClosable: true,
+      });
+    },
+    onError: () => {
+      toast({
+        title: "Błąd!",
+        description: "Nie udało się dodać komentarza. Spróbuj ponownie",
+        status: "success",
+        duration: 2000,
+        isClosable: true,
+      });
+    },
+  });
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} isCentered={true} size="sm">
@@ -438,16 +468,8 @@ const CommentModal = ({
                         { text: input },
                         { revalidate: true }
                       );
-
                       onClose();
                       setInput("");
-                      toast({
-                        title: "Dodano komentarz.",
-                        description: "Pomyślnie dodano komentarz",
-                        status: "success",
-                        duration: 2000,
-                        isClosable: true,
-                      });
                     } catch (e) {
                       toast({
                         title: "Błąd.",
