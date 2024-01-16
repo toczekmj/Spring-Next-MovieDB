@@ -90,7 +90,7 @@ const AddMovieBox: React.FC<AddMovieBoxProps> = ({ actorsArray }) => {
         director: string;
         description: string;
         productionYear: number;
-        linkURL?: string;
+        photoURL?: string;
         // actors: [{ actorId: number }];
         actors: { actorId: number; firstName: string; lastName: string }[];
         genre: string;
@@ -344,7 +344,7 @@ const AddMovieBox: React.FC<AddMovieBoxProps> = ({ actorsArray }) => {
                 // ],
                 actors: finalActors,
                 // actors: [{ actorId: 2 }],
-                linkURL: linkURL,
+                photoURL: linkURL,
                 genre: inputs.genre,
               },
               { revalidate: true }
