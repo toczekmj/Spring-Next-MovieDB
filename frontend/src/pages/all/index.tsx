@@ -37,9 +37,11 @@ export default function SingleListMovie() {
   const [sortOrder, setSortOrder] = useState("asc");
   const [sortCriteria, setSortCriteria] = useState("");
   const [input, setInput] = useState("");
-
   const { data, error } = useSWR<MovieData[]>(APIURL, fetcher);
   console.log(data);
+
+  const dataGOOD = data?.filter((movie) => movie.photoURL !== null);
+  console.log(dataGOOD);
   if (error) return <div>Failed to fetch</div>;
   if (!data) {
     return (

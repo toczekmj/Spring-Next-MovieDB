@@ -181,6 +181,7 @@ const AddMovieBox: React.FC<AddMovieBoxProps> = ({ actorsArray }) => {
     "Tragikomedia",
     "Komedia romantyczna",
   ];
+
   return (
     <>
       <Stack w="30%" spacing={5}>
@@ -331,6 +332,7 @@ const AddMovieBox: React.FC<AddMovieBoxProps> = ({ actorsArray }) => {
               });
               return;
             }
+
             const result = await trigger(
               {
                 title: inputs.title,
@@ -347,7 +349,6 @@ const AddMovieBox: React.FC<AddMovieBoxProps> = ({ actorsArray }) => {
               },
               { revalidate: true }
             );
-
             setActorSelectValue([]);
             setlinkURL("");
             setInputs({
