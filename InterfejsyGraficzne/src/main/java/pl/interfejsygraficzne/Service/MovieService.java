@@ -1,5 +1,6 @@
 package pl.interfejsygraficzne.Service;
 
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.interfejsygraficzne.Model.Actor;
@@ -16,9 +17,11 @@ import java.util.List;
 public class MovieService {
     private final IMovieRepository repository;
     private final ActorService actorService;
-    public MovieService(IMovieRepository repository, ActorService actorService) {
+    private final RatingService ratingService;
+    public MovieService(IMovieRepository repository, ActorService actorService, @Lazy RatingService ratingService) {
         this.repository = repository;
         this.actorService = actorService;
+        this.ratingService = ratingService;
     }
     public Movie saveMovie(Movie movie) {
         Movie movieWithId = repository.save(movie);
@@ -30,6 +33,10 @@ public class MovieService {
                 actorService.saveActor(a)
             );
         }
+
+        if(movieWithId.getRating() == null)
+            ratingService.addRating(movieWithId.getMovieId(), null);
+
         return repository.save(movieWithId);
     }
     public List<Movie> getMovies(){
