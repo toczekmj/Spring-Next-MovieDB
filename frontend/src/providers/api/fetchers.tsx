@@ -23,7 +23,7 @@ export const fetchComments = function (commentList: Comment[]) {
 };
 
 export const fetchRating = function (rating: Rating) {
-  const votes: number = parseInt(rating.votesCount);
+  const votes: number = rating.votesCount;
   const plot: number = parseInt(rating.plot);
   const acting: number = parseInt(rating.acting);
   const scenography: number = parseInt(rating.scenography);

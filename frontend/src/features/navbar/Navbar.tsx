@@ -207,9 +207,10 @@ const DesktopNav = () => {
   const linkHoverColor = useColorModeValue("gray.800", "white");
   const popoverContentBgColor = useColorModeValue("white", "gray.800");
 
+  const isLoggedIn = useAtomValue(loginAtom);
   return (
     <Stack direction={"row"} spacing={4}>
-      {NAV_ITEMS.map((navItem) => (
+      {NAV_ITEMS.map((navItem, index) => (
         <Box key={navItem.label}>
           <Popover trigger={"hover"} placement={"bottom-start"}>
             <PopoverTrigger>
@@ -224,6 +225,7 @@ const DesktopNav = () => {
                   textDecoration: "underline",
                   color: linkHoverColor,
                 }}
+                display={index > 0 && !isLoggedIn ? "none" : ""}
               >
                 {navItem.label}
               </Box>
@@ -372,7 +374,7 @@ const NAV_ITEMS: Array<NavItem> = [
     // visibility: true,
   },
   {
-    label: "Dodaj Film",
+    label: "Filmy",
     // visibility: true,
 
     children: [
@@ -382,12 +384,12 @@ const NAV_ITEMS: Array<NavItem> = [
         href: "/add_movie",
       },
       {
-        label: "Dodaj serial",
-        subLabel: "Dostępne już wkrótce!",
-        href: "/404",
+        label: "Przeglądarka filmów",
+        subLabel: "Zobacz wszystkie dostępne filmy!",
+        href: "/all",
       },
     ],
-    href: "/add_movie",
+    href: "/all",
   },
   {
     label: "Moje Listy",
@@ -395,14 +397,14 @@ const NAV_ITEMS: Array<NavItem> = [
     href: "/my_list",
     children: [
       {
-        label: "Moje listy",
+        label: "Stwórz listę",
         subLabel: "Stwórz swoje listy filmowe!",
-        href: "/my_list",
+        href: "/create_list",
       },
       {
-        label: "Listy moich znajomych",
-        subLabel: "Przeglądaj listy swoich znajomych i je oceniaj!",
-        href: "/404",
+        label: "Moje listy",
+        subLabel: "Zobacz swoje listy filmowe",
+        href: "/my_list",
       },
     ],
   },

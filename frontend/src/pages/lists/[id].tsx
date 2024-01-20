@@ -54,6 +54,7 @@ export default function SingleListMovie() {
     }
   };
 
+  const toast = useToast();
   const sendRequest = async (
     url: string,
     {
@@ -82,7 +83,6 @@ export default function SingleListMovie() {
       });
     },
   });
-  const toast = useToast();
   if (error) return <div>Failed to fetch</div>;
   if (!data) {
     return (
@@ -146,6 +146,9 @@ export default function SingleListMovie() {
       )}
       {isLoggedIn ? (
         <>
+          <Button variant="link" w="fit-content">
+            Edytuj listę
+          </Button>
           <Button
             bg="red"
             color="white"

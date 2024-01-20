@@ -78,6 +78,16 @@ export default function SingleMoviePage() {
 
   const rating = data.rating !== null ? fetchRating(data.rating) : [];
 
+  const numberOfVotes =
+    data.rating !== null
+      ? data.rating.votesCount === 1
+        ? `(${data.rating.votesCount} głos)`
+        : data.rating.votesCount % 10 === 2 ||
+            data.rating.votesCount % 10 === 3 ||
+            data.rating.votesCount % 10 === 4
+          ? `(${data.rating.votesCount} głosy)`
+          : `(${data.rating.votesCount} głosów)`
+      : "";
   return (
     <Stack align="center" justifyContent="center" spacing="50px" my="100px">
       <Card w="40%" boxShadow="lg">
@@ -101,7 +111,7 @@ export default function SingleMoviePage() {
             <b>Główna obsada:</b> {actorsList}
           </Text>
           <Text mt="10px">
-            <b>Opinie telewidzów:</b>
+            <b>Opinie telewidzów:</b> {numberOfVotes}
           </Text>
           {rating.length === 0 ? (
             <Text>Brak ocen dla podanego filmu</Text>
@@ -211,7 +221,26 @@ const AddRatingPopover = ({
       body: JSON.stringify(arg),
     }).then((res) => res.json());
   };
-  const { trigger } = useSWRMutation(apiLink, sendRequest);
+  const { trigger } = useSWRMutation(apiLink, sendRequest, {
+    onSuccess: () => {
+      toast({
+        title: "Dodano recenzję.",
+        description: "Pomyślnie dodano opinię",
+        status: "success",
+        duration: 2000,
+        isClosable: true,
+      });
+    },
+    onError: () => {
+      toast({
+        title: "Błąd!",
+        description: "Nie udało się dodać opinii. Spróbuj ponownie",
+        status: "success",
+        duration: 2000,
+        isClosable: true,
+      });
+    },
+  });
   const toast = useToast();
 
   return (
@@ -303,14 +332,6 @@ const AddRatingPopover = ({
                       );
 
                       onClose();
-
-                      toast({
-                        title: "Dodano komentarz.",
-                        description: "Pomyślnie dodano opinię",
-                        status: "success",
-                        duration: 2000,
-                        isClosable: true,
-                      });
                     } catch (e) {
                       toast({
                         title: "Błąd.",
@@ -365,7 +386,26 @@ const CommentModal = ({
       body: JSON.stringify(arg),
     }).then((res) => res.json());
   };
-  const { trigger } = useSWRMutation(apiurl, sendRequest);
+  const { trigger } = useSWRMutation(apiurl, sendRequest, {
+    onSuccess: () => {
+      toast({
+        title: "Dodano komentarz.",
+        description: "Pomyślnie dodano komentarz",
+        status: "success",
+        duration: 2000,
+        isClosable: true,
+      });
+    },
+    onError: () => {
+      toast({
+        title: "Błąd!",
+        description: "Nie udało się dodać komentarza. Spróbuj ponownie",
+        status: "success",
+        duration: 2000,
+        isClosable: true,
+      });
+    },
+  });
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} isCentered={true} size="sm">
@@ -428,16 +468,8 @@ const CommentModal = ({
                         { text: input },
                         { revalidate: true }
                       );
-
                       onClose();
                       setInput("");
-                      toast({
-                        title: "Dodano komentarz.",
-                        description: "Pomyślnie dodano komentarz",
-                        status: "success",
-                        duration: 2000,
-                        isClosable: true,
-                      });
                     } catch (e) {
                       toast({
                         title: "Błąd.",
