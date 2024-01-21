@@ -79,7 +79,7 @@ public class DatabaseSeeder {
             seedMovies();
             seedLists();
         }
-        System.out.println("Seeding Completed" + TColours.ANSI_RESET);
+        TerminalColours.PrintColour("Seeding Completed", TColours.ANSI_RESET);
     }
 
 
