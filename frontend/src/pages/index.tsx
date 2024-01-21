@@ -64,7 +64,7 @@ const Home = () => {
           <Text fontSize="26px" fontWeight="700">
             Polecane filmy
           </Text>
-          <Grid templateColumns="repeat(2, 1fr)" gap={4}>
+          <Grid templateColumns="repeat(2, 1fr)" gap={4} maxH="550px">
             {topThreeMovies.map((movie, index) => (
               <GridItem
                 key={index}
@@ -83,6 +83,7 @@ const Home = () => {
                       ? movie.photoURL
                       : "https://imgur.com/i9PqYju.png"
                   }
+                  objectFit={index === 0 ? "none" : "cover"}
                   transition="transform 0.3s ease-in-out"
                   _groupHover={{
                     transform: "scale(1.1)",
@@ -102,7 +103,7 @@ const Home = () => {
                   color="white"
                   zIndex={1}
                 >
-                  {movie.title}
+                  {movie.title.toUpperCase()}
                 </Text>
               </GridItem>
             ))}
@@ -123,7 +124,7 @@ const Home = () => {
 
         <Stack w="20vw" h="60vh">
           <Text fontSize="26px" fontWeight="700">
-            Ostatnio dodane
+            Najnowsze filmy
           </Text>
           <Grid templateRows="repeat(6, 1fr)" gap={4} h="100%">
             {newestMovies.map((movie) => (
@@ -137,6 +138,7 @@ const Home = () => {
               >
                 <Image
                   w="125px"
+                  h="80px"
                   mr="15px"
                   src={movie.photoURL ?? "https://imgur.com/i9PqYju.png"}
                   transition="transform 0.3s ease-in-out"
@@ -145,6 +147,12 @@ const Home = () => {
                     // transition: "transform 0.3s ease-in-out",
                   }}
                   alt={"photo"}
+                  objectFit="cover"
+                  // object-fit: contain;
+                  // object-fit: cover;
+                  // object-fit: fill;
+                  // object-fit: none;
+                  // object-fit: scale-down;
                 />
                 <Text alignSelf="center">{movie.title}</Text>
               </GridItem>
