@@ -2,7 +2,7 @@
 # Movie Database
 
 Group D's project for graphic interfaces class.
-Written in Next.js 
+Written in Next.js and Spring 
 
 
 
