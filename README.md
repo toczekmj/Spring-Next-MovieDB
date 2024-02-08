@@ -19,7 +19,7 @@ Written in Next.js
 
 **Client:** Next.js, TypeScript
 
-**Server:** Java, Spring, Docker, Bash
+**Server:** Java, Spring, Docker, Bash, Node
 
 
 ## Run Locally
