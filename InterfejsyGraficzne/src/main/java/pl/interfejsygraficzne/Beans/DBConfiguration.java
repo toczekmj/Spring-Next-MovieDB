@@ -23,29 +23,30 @@ public class DBConfiguration {
 
         if(environment == null || environment.isEmpty())
         {
-//            System.out.println(TerminalColours.ANSI_RED_BACKGROUND + "Please set environment in application.properties" + TerminalColours.ANSI_RESET);
             TerminalColours.PrintColour("Please set environment in application.properties", TColours.ANSI_RED_BACKGROUND);
         }
         else {
-            String uri = "jdbc:mysql://maluch.mikr.us:";
-
+            //here should go your mysql url
+            String uri = env.getProperty("database.url");
             var port = env.getProperty("database.port");
+            var name = env.getProperty("database.name");
             if(port == null || port.isEmpty())
-//                System.out.println(TerminalColours.ANSI_YELLOW_BACKGROUND + "Please set port in application.properties" + TerminalColours.ANSI_RESET);
                 TerminalColours.PrintColour("Please set port in application.properties", TColours.ANSI_YELLOW_BACKGROUND);
+            else if(name == null || name.isEmpty())
+                TerminalColours.PrintColour("Please set database name in application.properties", TColours.ANSI_YELLOW_BACKGROUND);
             else
                 uri += port + "/";
 
             //set environment
             switch (environment){
                 case "dev":
-                    uri += "InterfejsyTest";
+                    uri += name + "Dev";
                     break;
                 case "prod":
-                    uri += "Interfejsy";
+                    uri += name;
                     break;
                 case "local":
-                    uri = "jdbc:mysql://localhost:3306/InterfejsyLocal";
+                    uri += name + "Local";
                     break;
                 default:
                     TerminalColours.PrintColour("Not a valid environment in application.properties", TColours.ANSI_RED);
