@@ -1,8 +1,7 @@
 
 # Movie Database
 
-Group D's project for graphic interfaces class.
-Written in Next.js and Spring 
+![Spring-Next-MovieDB](https://socialify.git.ci/toczekmj/Spring-Next-MovieDB/image?description=1&descriptionEditable=Group%20D%27s%20project%20for%20graphic%20interfaces%20class.%20%0AWritten%20in%20Next.js%20and%20Spring&language=1&name=1&owner=1&stargazers=1&theme=Auto)
 
 
 
