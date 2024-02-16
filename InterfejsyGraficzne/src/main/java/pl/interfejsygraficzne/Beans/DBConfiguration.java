@@ -8,6 +8,7 @@ import pl.interfejsygraficzne.Misc.TColours;
 import pl.interfejsygraficzne.Misc.TerminalColours;
 
 import javax.sql.DataSource;
+import java.util.Objects;
 
 @Configuration
 public class DBConfiguration {
@@ -27,26 +28,31 @@ public class DBConfiguration {
         }
         else {
             //here should go your mysql url
-            String uri = env.getProperty("database.url");
+            String uri = "jdbc:mysql://";
+            String ip = null;
             var port = env.getProperty("database.port");
             var name = env.getProperty("database.name");
             if(port == null || port.isEmpty())
                 TerminalColours.PrintColour("Please set port in application.properties", TColours.ANSI_YELLOW_BACKGROUND);
             else if(name == null || name.isEmpty())
                 TerminalColours.PrintColour("Please set database name in application.properties", TColours.ANSI_YELLOW_BACKGROUND);
-            else
-                uri += port + "/";
+
+            if(!environment.equals("local"))
+                ip = env.getProperty("database.ip");
+
+            if(Objects.equals(ip, ""))
+                TerminalColours.PrintColour("Database ip is required in order to establish connection.", TColours.ANSI_RED);
 
             //set environment
             switch (environment){
                 case "dev":
-                    uri += name + "Dev";
+                    uri += ip + ':' + port + '/' + name + "Dev";
                     break;
                 case "prod":
-                    uri += name;
+                    uri += ip + ':' + port + '/' + name + "Prod";
                     break;
                 case "local":
-                    uri += name + "Local";
+                    uri += "localhost:" + port + '/' + name + "Local";
                     break;
                 default:
                     TerminalColours.PrintColour("Not a valid environment in application.properties", TColours.ANSI_RED);
