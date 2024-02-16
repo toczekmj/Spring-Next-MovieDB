@@ -60,23 +60,16 @@ Edit application.properties
 ```
 Set the following:
 ```bash
-  database.port = #make sure it matches your local instance of MySql
-  database.password = #your database password
-  database.login = #your database login 
-  seed.on.startup = #true if you want to fulfill the database with randomly generated data
-  working.environment = local
-```
-Make sure, that you have created database named 'InterfejsyTest' on your local MySql instance. Otherwise you should modify the file:
-```bash
-  /src/main/java/pl/interfejsygraficzne/Beans/DBConfiguration.java
-```
-and make changes here:
-```java
-  case "local":
-    uri = "jdbc:mysql://localhost:3306/InterfejsyLocal";
-    break;
-```
-changing 'InterfejsyLocal' to your desired database name. 
+  database.port= #make sure it matches your local instance of MySql
+  database.password= #your database password
+  database.username= #your database login 
+  database.name= #your database name
+  database.url= #url to your instance e.g. jdbc:mysql://my.database.url:
+  seed.on.startup= #true if you want to fulfill the database with randomly generated data
+  working.environment= local #can be 'local' 'dev' 'prod'
+  
+
+``` 
 
 After that, you should be able to perform 
 ```bash
