@@ -52,11 +52,11 @@ export default function SingleMoviePage() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const isLoggedIn = useAtomValue(loginAtom);
 
-  const APIURL = `https://www.projektimdb.it/api/v1/movies/${id as string}`;
-  const POSTURL = `https://www.projektimdb.it/api/v1/movies/${
+  const APIURL = `http://localhost:5001/api/v1/movies/${id as string}`;
+  const POSTURL = `http://localhost:5001/api/v1/movies/${
     id as string
   }/comments`;
-  const ratingURL = `https://www.projektimdb.it/api/v1/movies/${
+  const ratingURL = `http://localhost:5001/api/v1/movies/${
     id as string
   }/ratings`;
 

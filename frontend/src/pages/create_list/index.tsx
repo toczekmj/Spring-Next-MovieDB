@@ -65,13 +65,13 @@ const MyList = () => {
       setSortOrder("asc");
     }
   };
-  const APIURL = `https://www.projektimdb.it/api/v1/movies`;
+  const APIURL = `http://localhost:5001/api/v1/movies`;
 
   const { data, error, isLoading } = useSWR<MovieData[]>(APIURL, fetcher, {
     refreshInterval: 1000,
   });
 
-  const urlLists = `https://www.projektimdb.it/api/v1/lists`;
+  const urlLists = `http://localhost:5001/api/v1/lists`;
   const sendRequest = async (
     url: string,
     {
@@ -470,7 +470,7 @@ const ListDrawer = ({
   onClose: () => void;
 }) => {
   const router = useRouter();
-  const APIURL = `https://www.projektimdb.it/api/v1/lists`;
+  const APIURL = `http://localhost:5001/api/v1/lists`;
 
   const { data, error, isLoading } = useSWR<MovieList[]>(APIURL, fetcher, {
     refreshInterval: 1000,

@@ -48,7 +48,7 @@ export const SearchModal = ({
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInput(e.target.value);
   };
-  const APIURL = `https://www.projektimdb.it/api/v1/movies`;
+  const APIURL = `http://localhost:5001/api/v1/movies`;
   const { data, error, isLoading } = useSWR<MovieData[]>(APIURL, fetcher);
 
   const filteredMovies = data

@@ -35,7 +35,7 @@ export default function SingleListMovie() {
 
   const [copySuccess, setCopySuccess] = useState<boolean>(false);
 
-  const APIURL = `https://www.projektimdb.it/api/v1/lists/${id as string}`;
+  const APIURL = `http://localhost:5001/api/v1/lists/${id as string}`;
 
   const { data, error } = useSWR<MovieList>(APIURL, fetcher, {
     refreshInterval: 1000,

@@ -32,7 +32,7 @@ import {
 } from "@chakra-ui/icons";
 
 export default function SingleListMovie() {
-  const APIURL = `https://www.projektimdb.it/api/v1/movies`;
+  const APIURL = `http://localhost:5001/api/v1/movies`;
 
   const [sortOrder, setSortOrder] = useState("asc");
   const [sortCriteria, setSortCriteria] = useState("");

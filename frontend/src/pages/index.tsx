@@ -17,7 +17,7 @@ import { useRouter } from "next/router";
 import useSWR from "swr";
 
 const Home = () => {
-  const APIURL = `https://www.projektimdb.it/api/v1/movies`;
+  const APIURL = `http://localhost:5001/api/v1/movies`;
   const { data, error, isLoading } = useSWR<MovieData[]>(APIURL, fetcher);
   const router = useRouter();
   if (error) return <div>Failed to fetch</div>;

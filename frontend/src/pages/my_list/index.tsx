@@ -21,7 +21,7 @@ export default function SingleListMovie() {
   const router = useRouter();
   const isLoggedIn = useAtomValue(loginAtom);
 
-  const APIURL = `https://www.projektimdb.it/api/v1/lists`;
+  const APIURL = `http://localhost:5001/api/v1/lists`;
 
   const { data, error } = useSWR<MovieList[]>(APIURL, fetcher);
   if (error) return <div>Failed to fetch</div>;

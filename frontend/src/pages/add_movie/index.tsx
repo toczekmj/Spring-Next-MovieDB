@@ -36,7 +36,7 @@ import useSWR from "swr";
 import useSWRMutation from "swr/mutation";
 
 const AddMovie = () => {
-  const urlActors = `https://www.projektimdb.it/api/v1/actors`;
+  const urlActors = `http://localhost:5001/api/v1/actors`;
 
   const { data: actors, error: error2 } = useSWR<Actor[]>(urlActors, fetcher);
 
@@ -79,7 +79,7 @@ const AddMovieBox: React.FC<AddMovieBoxProps> = ({ actorsArray }) => {
     onClose: onCloseActorModal,
   } = useDisclosure();
 
-  const urlMovies = `https://www.projektimdb.it/api/v1/movies`;
+  const urlMovies = `http://localhost:5001/api/v1/movies`;
   const sendRequest = async (
     url: string,
     {
@@ -383,7 +383,7 @@ const AddActorModal = ({
   isOpen: boolean;
   onClose: () => void;
 }) => {
-  const urlActors = `https://www.projektimdb.it/api/v1/actors`;
+  const urlActors = `http://localhost:5001/api/v1/actors`;
   const sendRequest = async (
     url: string,
     { arg }: { arg: { firstName: string; lastName: string } }
