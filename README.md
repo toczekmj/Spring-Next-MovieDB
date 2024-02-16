@@ -69,17 +69,6 @@ Set the following:
   database.ip = #in case you are not running MySql instance locally, provide it's ip
   
 ```
-Make sure, that you have created database named 'InterfejsyTest' on your local MySql instance. Otherwise you should modify the file:
-```bash
-  /src/main/java/pl/interfejsygraficzne/Beans/DBConfiguration.java
-```
-and make changes here:
-```java
-  case "local":
-    uri = "jdbc:mysql://localhost:3306/InterfejsyLocal";
-    break;
-```
-changing 'InterfejsyLocal' to your desired database name. 
 
 After that, you should be able to perform 
 ```bash
@@ -93,12 +82,15 @@ One thing you should keep in mind is, that this docker container is running on p
 ```bash
 nano run.sh 
 ```
-and chane ports to your liking here:
+and change ports to your liking here:
 ```bash
 docker_run_detached() {
   docker run -d -p 80:80 --name "$1" "$2"
 }
 ```
+
+Remember that local instance of frontend is running on http://localhost:5001/
+
 Also you shouldn't care about update.sh file, which was designed to work with cron and to pull latest changes from main branch of this repo, to the remote server. What this file does it checkes if there was any update to main branch of this repository and in case it was, pulls lates changes and recompiles the docker image. 
 
 
